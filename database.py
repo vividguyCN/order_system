@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_
+from sqlalchemy import and_,or_
 from app import app
 from config import DB_URI
 
@@ -24,10 +24,14 @@ def add_object(user):
     print("add %r " % user.__repr__)
 
 # username 和 psd 查找
-def query_object(user, u_name, u_psd):
-
-    result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).all()
-    # print(result)
+def query_object(u_name, u_psd, u_email, type):
+    if(type == 'login'):
+        print('login')
+        result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).all()
+    elif(type == 'regiest'):
+        print('regiest')
+        result = User.query.filter(or_(User.username == u_name, User.email == u_email)).all()
+    print(result)
     # print('find %r' % user.__repr__)
     return result
 
