@@ -28,8 +28,8 @@ def query_object(u_name, u_psd, u_email, type):
     if(type == 'login'):
         print('login')
         result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).all()
-    elif(type == 'regiest'):
-        print('regiest')
+    elif(type == 'register'):
+        print('register')
         result = User.query.filter(or_(User.username == u_name, User.email == u_email)).all()
     print(result)
     # print('find %r' % user.__repr__)

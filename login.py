@@ -4,14 +4,14 @@ from database import User,query_object, add_object
 from app import app
 
 
-@app.route("/", methods=("GET", "POST"))
+@app.route("/", methods=["GET", "POST"])
 def login():
     # GET请求
     if request.method == "GET":
         return render_template("login.html")
     # POST请求
     if request.method == "POST":
-        # 获取数据
+        # 获取数据 json
         user_info = request.form.to_dict()
         back_data = {
             'username':user_info.get('username'),
@@ -19,7 +19,7 @@ def login():
             'email':user_info.get('email')
         }
         # 数据库查询
-        user = User()
+
         result = query_object(back_data['username'], back_data['password'], ' ', 'login')
         print(result)
         if result != []:
@@ -28,13 +28,13 @@ def login():
             return json.dumps(back_data), 200
     # print(request.form.to_dict())
     # 登录失败 返回状态码
-    return 'failed', 404
+    return 'failed', 403
 
-@app.route("/regiest", methods=("GET", "POST"))
-def regiest():
+@app.route("/register", methods=("GET", "POST"))
+def register():
     # GET请求
     if request.method == "GET":
-        return render_template("regiest.html")
+        return render_template("register.html")
     # POST请求
     if request.method == "POST":
         # 获取数据
@@ -47,7 +47,7 @@ def regiest():
         # 数据库查询
         user = User()
         # 检查是否存在相同username,email
-        result = query_object(back_data['username'], '', back_data['email'], 'regiest')
+        result = query_object(back_data['username'], '', back_data['email'], 'register')
         if(result == []):
             # add new_account
             user.username = back_data['username']
@@ -57,7 +57,7 @@ def regiest():
 
             return json.dumps(back_data), 200
     # print(request.form.to_dict())
-    # regiest失败 返回状态码
-    return 'failed', 404
+    # register失败 返回 josn （详细报错信息）
+    return 'failed',200
 
 app.run(host="0.0.0.0", port=3000, debug=True)
