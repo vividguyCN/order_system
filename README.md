@@ -1,6 +1,6 @@
 # order_system
 
-## Setup
+### Setup
 ```
 pip install -r requirements.txt
 ```
@@ -8,4 +8,9 @@ pip install -r requirements.txt
 ### Runserver
 ```
 python3 login.py
+```
+
+### visit API
+```
+/apidocs
 ```

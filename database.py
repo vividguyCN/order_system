@@ -47,4 +47,4 @@ def query_object(u_name, u_psd, u_email, type):
     return result
 
 
-# db.create_all()
+db.create_all()
