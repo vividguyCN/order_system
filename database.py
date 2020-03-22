@@ -15,8 +15,8 @@ class User(db.Model):
     password = db.Column(db.String(255),unique=True)
     email = db.Column(db.String(255),unique=True)
     def __repr__(self):
-        return '<User username:%r password: %r email:%r>' % (self.username,self.password,self.email)
-
+        # return '<User uid:%r username:%r password: %r email:%r>' % (self.uid, self.username,self.password,self.email)
+        return '%r' % (self.uid)
 # 增加
 def add_object(user):
     db.session.add(user)
@@ -26,14 +26,14 @@ def add_object(user):
 # username 和 psd 查找
 def query_object(u_name, u_psd, u_email, type):
     if(type == 'login'):
+        # login success return uid
         print('login')
         result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).all()
+        return result
     elif(type == 'register'):
         print('register')
         result = User.query.filter(or_(User.username == u_name, User.email == u_email)).all()
         if(result != []):
-            # 这个地方很奇怪，为什么username不用query？
-            # if User.username == u_name and User.email == u_email:
             if User.query.filter(and_(User.username == u_name, User.email == u_email)).all():
                 return 3  # both same
             elif User.query.filter(User.email == u_email).all():
@@ -42,9 +42,9 @@ def query_object(u_name, u_psd, u_email, type):
                 return 1  # same username
         else:
             return 4  # register success
-    print(result)
+    # print(result)
     # print('find %r' % user.__repr__)
-    return result
+    # return result
 
 
 # db.create_all()

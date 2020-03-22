@@ -29,7 +29,7 @@ def login():
         example: 123456
     responses:
       200:
-        description: Login success
+        description: return uid
       403:
         description: Login failed
     '''
@@ -42,18 +42,21 @@ def login():
         # user_info = json.loads(request.form.get('data'))
         user_info = request.get_json()
         back_data = {
-            'username':user_info.get('username'),
-            'password':user_info.get('password'),
-            'email':user_info.get('email')
+            'username': user_info.get('username'),
+            'password': user_info.get('password')
         }
         # 数据库查询
-
+        # TODO 查询成功直接返回uid的值
         result = query_object(back_data['username'], back_data['password'], ' ', 'login')
-        print(result)
+        # print(result[0])
+        # print(json_data)
         if result != []:
             # 对登录成功的用户，返回状态码和json
             # json使用字典
-            return json.dumps(back_data), 200
+            json_data = {
+                "uid": str(result[0])
+            }
+            return json.dumps(json_data), 200
     # print(request.form.to_dict())
     # 登录失败 返回状态码
     return 'failed', 403
