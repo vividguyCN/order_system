@@ -34,14 +34,12 @@ def query_object(u_name, u_psd, u_email, type):
         print('register')
         result = User.query.filter(or_(User.username == u_name, User.email == u_email)).all()
         if(result != []):
-            if User.query.filter(and_(User.username == u_name, User.email == u_email)).all():
-                return 3  # both same
-            elif User.query.filter(User.email == u_email).all():
+            if User.query.filter(User.email == u_email).all():
                 return 2  # same email
             elif User.query.filter(User.username == u_name).all():
                 return 1  # same username
         else:
-            return 4  # register success
+            return 3  # register success
     # print(result)
     # print('find %r' % user.__repr__)
     # return result

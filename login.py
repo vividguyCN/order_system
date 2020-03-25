@@ -3,11 +3,13 @@ import json
 from database import User,query_object, add_object
 from app import app
 from flasgger import Swagger, swag_from
+import logging
 
 Swagger(app)
 
 @app.route("/api/login", methods=["POST"])
 def login():
+    # TODO add more responses description
     '''
     This is the Login API
     Call this api to login
@@ -30,6 +32,14 @@ def login():
     responses:
       200:
         description: return uid
+        content:
+            application/json:
+            schema:
+                type: object
+                properties:
+                    uid:
+                        type: integer
+                        description: user id
       403:
         description: Login failed
     '''
@@ -56,9 +66,12 @@ def login():
             json_data = {
                 "uid": str(result[0])
             }
+            app.logger.info('%s logged in successfully',back_data['username'])
             return json.dumps(json_data), 200
     # print(request.form.to_dict())
     # 登录失败 返回状态码
+    # TODO 可以改成abort
+    app.logger.info('%S failed to login in ', back_data['username'])
     return 'failed', 403
 
 @app.route("/api/register", methods=["POST"])
@@ -112,12 +125,10 @@ def register():
         result = query_object(back_data['username'], '', back_data['email'], 'register')
         print(result)
         if result == 1:
-            back_data['reason'] = 'same username'
+            back_data['reason'] = '用户名被占用'
         elif result == 2:
-            back_data['reason'] = 'same email'
-        elif result == 3:
-            back_data['reason'] = 'both same'
-        elif(result == 4):
+            back_data['reason'] = '已存在的邮箱地址，请直接登录'
+        elif(result == 3):
             # add new_account
             user = User()
             user.username = back_data['username']
