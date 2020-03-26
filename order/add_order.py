@@ -83,9 +83,20 @@ def add_order():
        example: 182****9597
     responses:
       200:
-       description: insert order success
+       description: insert order success,return status
+       schema:
+         $ref: "#/definitions/Insert_order"
       502:
        description: insert order failed
+       schema:
+         $ref: "#/definitions/Insert_order"
+
+    definitions:
+        Insert_order:
+          properties:
+            status:
+              type: boolean
+              example: true/false
     '''
     if request.method == "POST":
         order_info = request.get_json()
@@ -96,7 +107,7 @@ def add_order():
             'accessories': order_info.get('withAccessories'),
             'sku': order_info.get('productDescription'),
             'platform': order_info.get('platform'),
-            'income': order_info.get('money')['incomePrice'],
+            'income': order_info.get('money')['purchasePrice'],
             'sold': order_info.get('money')['soldPrice'],
             'post': order_info.get('money')['postPrice'],
             'purchaser': order_info.get('purchaser'),

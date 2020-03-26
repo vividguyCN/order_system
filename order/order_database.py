@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_,or_
 from order_app import app
 from order_config import DB_URI
+import json
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
@@ -57,12 +58,34 @@ def add_object(order,money,buyer):
     print("add %r " % buyer.__repr__)
 
 
-def get_all_orders(order):
-    result = order.query.filter().all()
-    return result
+def get_all_orders(order, money, buyer, page):
+    order_list = []
+    # page1 : 1~50,page2 : 51~100
+    start = (page - 1) * 50 + 1
+    len = range(start, order.query.count() + 1)
+    for i in len:
+        order_data = order.query.get(i)
+        money_data = money.query.get(i)
+        buyer_data = buyer.query.get(i)
+        if(order_data == None):
+            continue
 
+        data = {
+            "name": order_data.name,
+            "type": order_data.type,
+            "income": money_data.income,
+            "sold": money_data.sold,
+            "post": money_data.post,
+            "profit": money_data.profit,
+            "purchaser": buyer_data.name,
+            "contact": buyer_data.contact,
+            "platform": order_data.platform
+        }
+        # 在server层转换json会在结果中多出很多\
+        # data_json = json.dumps(data)
+        order_list.append(data)
+
+    return order_list
 
 # TODO 查找订单
-
-
 
