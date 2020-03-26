@@ -157,6 +157,8 @@ def add_order():
 
         # TODO 增加异常处理（数据库回滚）,增加insert失败
         add_object(order, money, buyer)
-        status = 'success'
+        back_json = {
+            "status": "success"
+        }
 
-    return json.dumps(status),200
+    return json.dumps(back_json),200
