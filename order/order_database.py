@@ -14,7 +14,8 @@ class Order(db.Model):
     type = db.Column(db.String(255),unique=True)
     name = db.Column(db.String(255),unique=True)
     sku = db.Column(db.String(255),unique=True)
-    accessories = db.Column(db.Boolean, unique=True)
+    withAccessories = db.Column(db.Boolean, unique=True)
+    accessories = db.Column(db.String(255),unique=True)
     platform = db.Column(db.String(255),unique=True)
     remark = db.Column(db.String(255),unique=True)
     isActive = db.Column(db.Boolean,unique=True)
@@ -64,7 +65,7 @@ def get_all_orders(order, money, buyer, page):
         order_data = order.query.get(i)
         money_data = money.query.get(i)
         buyer_data = buyer.query.get(i)
-        if(order_data == None):
+        if(order_data == None ):
             continue
 
         data = {

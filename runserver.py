@@ -5,3 +5,4 @@ from application import app
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=3000, debug=True)
+    # app.run(host='172.20.10.2', port=8081,debug=True)

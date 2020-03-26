@@ -18,12 +18,12 @@ python3 runserver.py
 ### 创建数据表
 ```
 CREATE TABLE `login` (
-    `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-    `username` tinytext NOT NULL,
-    `password` tinytext NOT NULL,
-    `email` tinytext,
-		`isActive` bit NOT NULL DEFAULT 1,
-    PRIMARY KEY (`uid`)
+        `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+        `username` tinytext NOT NULL,
+        `password` tinytext NOT NULL,
+        `email` tinytext,
+	    `isActive` bit NOT NULL DEFAULT 1,
+         PRIMARY KEY (`uid`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `info`(
@@ -32,7 +32,8 @@ CREATE TABLE `info`(
 		`type` TINYTEXT NOT NULL,
 		`name` TINYTEXT NOT NULL,
 		`sku` TINYTEXT,
-		`accessories` bit NOT NULL,
+		`withAccessories` bit NOT NULL DEFAULT 0,
+        `accessories` TINYTEXT NOT NULL,
 		`platform` TINYTEXT NOT NULL,
 		`remark` TINYTEXT,
 		`isActive` bit NOT NULL DEFAULT 1,

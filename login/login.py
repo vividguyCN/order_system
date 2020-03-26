@@ -11,7 +11,7 @@ def login():
     Call this api to login
     ---
     tags:
-      - Login API
+      - Login
     parameters:
       - name: username
         in: body
@@ -29,21 +29,22 @@ def login():
       200:
         description: return uid
         schema:
-          $ref: "#/definitions/Login_json"
+          $ref: "#/definitions/LoginJson"
       403:
-        description: Login failed return code 403
+        description: Login failed return code 403 and string
+        schema:
+             properties:
+                msg:
+                  type: string
+                  example: 用户未注册或被封禁
 
     definitions:
-        Login_json:
+        LoginJson:
           properties:
             uid:
               type: integer
               example: 1
     '''
-    # GET请求 之后去掉
-    # if request.method == "GET":
-    #     return render_template("login.html")
-    # POST请求
     if request.method == "POST":
         # 获取数据 json
         # user_info = json.loads(request.form.get('data'))
@@ -65,7 +66,10 @@ def login():
     # print(request.form.to_dict())
     # 登录失败 返回状态码
     app.logger.info('%S failed to login in ', back_data['username'])
-    return '账户未注册或被封禁', 403
+    json_data = {
+        "msg": "账户未注册或被封禁"
+    }
+    return json.dumps(json_data), 403
 
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -74,7 +78,7 @@ def register():
     Call this api to register
     ---
     tags:
-      - Register API
+      - Register
     parameters:
       - name: username
         in: body
@@ -98,22 +102,18 @@ def register():
       200:
         description: success return verified=true,failed return verified=false and reason
         schema:
-           $ref: "#/definitions/Register_json"
+           $ref: "#/definitions/RegisterJson"
 
     definitions:
-        Register_json:
+        RegisterJson:
           properties:
             verified:
               type: boolean
-              example: true
+              example: false
             reason:
               type: string
-              example: same username
+              example: 相同的用户名
     '''
-    # GET请求
-    # if request.method == "GET":
-    #     return render_template("register.html")
-    # POST请求
     if request.method == "POST":
         # 获取数据
         user_info = request.get_json()
