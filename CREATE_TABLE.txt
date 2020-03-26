@@ -1,4 +1,4 @@
-CREATE TABLE `login1` (
+CREATE TABLE `login` (
     `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
     `username` tinytext NOT NULL,
     `password` tinytext NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE `login1` (
     PRIMARY KEY (`uid`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `info1`(
+CREATE TABLE `info`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		`user_id` int(11) UNSIGNED NOT NULL,
 		`type` TINYTEXT NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE `info1`(
 		PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `money1`(
+CREATE TABLE `money`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		`income` int(11) UNSIGNED NOT NULL,
 		`sold` int(11) UNSIGNED NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE `money1`(
 		PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `purchaser1`(
+CREATE TABLE `purchaser`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		`name` TINYTEXT NOT NULL,
 		`contact` TINYTEXT,
