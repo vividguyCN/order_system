@@ -1,10 +1,7 @@
 from flask import request
 import json
-from order_app import app
-from flasgger import Swagger, swag_from
-from order_database import Order, Money, Buyer, add_object
-
-Swagger(app)
+from order.order_database import Order, Money, Buyer, add_object
+from application import app
 
 @app.route("/api/add_order", methods=["POST"])
 def add_order():
@@ -138,6 +135,3 @@ def add_order():
         add_object(order, money, buyer)
 
     return json.dumps(back_data),200
-
-
-app.run(host="0.0.0.0", port=3000, debug=True)

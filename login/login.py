@@ -1,15 +1,11 @@
 from flask import request
 import json
-from database import User,query_object, add_object
-from app import app
-from flasgger import Swagger, swag_from
+from login.database import User, query_object, add_object
+from application import app
 import logging
-
-Swagger(app)
 
 @app.route("/api/login", methods=["POST"])
 def login():
-    # TODO add more responses description
     '''
     This is the Login API
     Call this api to login
@@ -151,5 +147,3 @@ def register():
             add_object(user)
 
     return json.dumps(back_json), 200
-
-app.run(host="0.0.0.0", port=3000, debug=True)

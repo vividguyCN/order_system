@@ -1,27 +1,26 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_,or_
-from app import app
+from sqlalchemy import and_, or_
+from application import app
 from config import DB_URI
 
-
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
-db = SQLAlchemy(app,use_native_unicode='utf8')
+login_db = SQLAlchemy(app, use_native_unicode='utf8')
 
 # 数据库类型
-class User(db.Model):
+class User(login_db.Model):
     __tablename__ = 'login'
-    uid = db.Column(db.Integer,primary_key=True)
-    username = db.Column(db.String(255),unique=True)
-    password = db.Column(db.String(255),unique=True)
-    email = db.Column(db.String(255),unique=True)
-    isActive = db.Column(db.Boolean,unique=True)  # 记录用户封禁状态
+    uid = login_db.Column(login_db.Integer, primary_key=True)
+    username = login_db.Column(login_db.String(255), unique=True)
+    password = login_db.Column(login_db.String(255), unique=True)
+    email = login_db.Column(login_db.String(255), unique=True)
+    isActive = login_db.Column(login_db.Boolean, unique=True)  # 记录用户封禁状态
 
     def __repr__(self):
         return '<User uid:%r username:%r password: %r email:%r>' % (self.uid, self.username,self.password,self.email)
 # 增加
 def add_object(user):
-    db.session.add(user)
-    db.session.commit()
+    login_db.session.add(user)
+    login_db.session.commit()
     print("add %r " % user.__repr__)
 
 # username 和 psd 查找

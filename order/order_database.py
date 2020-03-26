@@ -1,9 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_,or_
-from order_app import app
-from order_config import DB_URI
-import json
-
+from application import app
+from config import DB_URI
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
 db = SQLAlchemy(app,use_native_unicode='utf8')

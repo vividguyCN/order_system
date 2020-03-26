@@ -1,13 +1,11 @@
 from flask import request
 import json
-from order_app import app
-from flasgger import Swagger
-from order_database import Order, Money, Buyer, get_all_orders
+from order.order_database import Order, Money, Buyer, get_all_orders
+from application import app
 
-Swagger(app)
 
 @app.route("/api/get_order", methods=["POST"])
-def add_order():
+def get_order():
     '''
     Call this api to get all orders
     ---
@@ -67,6 +65,3 @@ def add_order():
         order_list = get_all_orders(order,money,buyer,page)
 
     return json.dumps(order_list),200
-
-
-app.run(host="0.0.0.0", port=3000, debug=True)
