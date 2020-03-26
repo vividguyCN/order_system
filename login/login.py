@@ -32,16 +32,17 @@ def login():
     responses:
       200:
         description: return uid
-        content:
-            application/json:
-            schema:
-                type: object
-                properties:
-                    uid:
-                        type: integer
-                        description: user id
+        schema:
+          $ref: "#/definitions/Login_json"
       403:
-        description: Login failed
+        description: Login failed return code 403
+
+    definitions:
+        Login_json:
+          properties:
+            uid:
+              type: integer
+              example: 1
     '''
     # GET请求 之后去掉
     # if request.method == "GET":
@@ -56,23 +57,19 @@ def login():
             'password': user_info.get('password')
         }
         # 数据库查询
-        # TODO 查询成功直接返回uid的值
         result = query_object(back_data['username'], back_data['password'], ' ', 'login')
-        # print(result[0])
-        # print(json_data)
-        if result != []:
+        if result != '':
             # 对登录成功的用户，返回状态码和json
             # json使用字典
             json_data = {
-                "uid": str(result[0])
+                "uid": str(result)
             }
             app.logger.info('%s logged in successfully',back_data['username'])
             return json.dumps(json_data), 200
     # print(request.form.to_dict())
     # 登录失败 返回状态码
-    # TODO 可以改成abort
     app.logger.info('%S failed to login in ', back_data['username'])
-    return 'failed', 403
+    return '账户未注册或被封禁', 403
 
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -103,7 +100,19 @@ def register():
         example: example@email.com
     responses:
       200:
-        description: Returns specific failure information
+        description: success return verified=true,failed return verified=false and reason
+        schema:
+           $ref: "#/definitions/Register_json"
+
+    definitions:
+        Register_json:
+          properties:
+            verified:
+              type: boolean
+              example: true
+            reason:
+              type: string
+              example: same username
     '''
     # GET请求
     # if request.method == "GET":
@@ -111,13 +120,15 @@ def register():
     # POST请求
     if request.method == "POST":
         # 获取数据
-        # user_info = json.loads(request.form.get('data'))
         user_info = request.get_json()
         back_data = {
             'username':user_info.get('username'),
             'password':user_info.get('password'),
             'email':user_info.get('email'),
-            'reason':'register success'
+        }
+        back_json = {
+            'verified': True,
+            'reason': '成功'
         }
 
         # 数据库查询
@@ -125,17 +136,20 @@ def register():
         result = query_object(back_data['username'], '', back_data['email'], 'register')
         print(result)
         if result == 1:
-            back_data['reason'] = '用户名被占用'
+            back_json['reason'] = '用户名被占用'
+            back_json['verified'] = False
         elif result == 2:
-            back_data['reason'] = '已存在的邮箱地址，请直接登录'
+            back_json['reason'] = '已存在的邮箱地址，请直接登录'
+            back_json['verified'] = False
         elif(result == 3):
             # add new_account
             user = User()
             user.username = back_data['username']
             user.password = back_data['password']
             user.email = back_data['email']
+            user.isActive = 1
             add_object(user)
 
-    return json.dumps(back_data), 200
+    return json.dumps(back_json), 200
 
 app.run(host="0.0.0.0", port=3000, debug=True)

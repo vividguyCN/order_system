@@ -6,8 +6,14 @@ pip install -r requirements.txt
 ```
 
 ### Runserver
+login server in login
 ```
 python3 login.py
+```
+order object in order
+```
+python3 add_order.py
+python3 get_orderlist.py
 ```
 
 ### visit API
@@ -16,19 +22,20 @@ python3 login.py
 ```
 
 ### create table 
-```
-CREATE TABLE `login` (
-    `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-    `username` tinytext,
-    `password` tinytext,
-    `email` tinytext,
-    PRIMARY KEY (`uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-```
+visit CREATE_TABLE.txt to create table
 
 ### config 
+login database:
 change attributes in config.py
+```
+HOSTNAME
+PORT
+DATABASE
+USERNAME
+PASSWORD
+```
+order database:
+change attributes in order_config.py
 ```
 HOSTNAME
 PORT
