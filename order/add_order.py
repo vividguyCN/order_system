@@ -104,10 +104,11 @@ def add_order():
     '''
     if request.method == "POST":
         order_info = request.get_json()
+        back_data = {}
+        back_data['user_id'] = order_info.get('userId')
         # 获取order信息
         order_info = order_info.get('order')
         back_data = {
-            'user_id': order_info.get('user_id'),
             'type': order_info.get('productType')[-1],
             'name': order_info.get('productName'),
             'withAccessories': order_info.get('withAccessories'),
