@@ -33,7 +33,7 @@ class Money(db.Model):
     post = db.Column(db.Integer, unique=True)
     profit = db.Column(db.Integer, unique=True)
     def __repr__(self):
-        return '<Order id:%r profit%r>' % (self.id,self.profit)
+        return '<Money id:%r profit%r>' % (self.id,self.profit)
 
 
 class Buyer(db.Model):

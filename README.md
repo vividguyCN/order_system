@@ -34,7 +34,7 @@ CREATE TABLE `info`(
 		`name` TINYTEXT NOT NULL,
 		`sku` TINYTEXT,
 		`withAccessories` bit NOT NULL DEFAULT 0,
-        `accessories` TINYTEXT NOT NULL,
+        `accessories` TINYTEXT,
 		`platform` TINYTEXT NOT NULL,
 		`remark` TINYTEXT,
 		`isActive` bit NOT NULL DEFAULT 1,
@@ -46,7 +46,7 @@ CREATE TABLE `money`(
 		`income` int(11) UNSIGNED NOT NULL,
 		`sold` int(11) UNSIGNED NOT NULL,
 		`post` int(11) UNSIGNED DEFAULT 0,
-		`profit` int(11) UNSIGNED NOT NULL,
+		`profit` int(11) NOT NULL,
 		PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

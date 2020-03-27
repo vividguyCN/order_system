@@ -136,15 +136,22 @@ def add_order():
         if(back_data['withAccessories']):
             accessories = ''
             for i in range(len(order_info.get('accessories'))):
-                accessories = accessories + str(order_info.get('accessories')[i])
+                accessories = accessories + str(order_info.get('accessories')[i]) + '/'
             order.accessories = accessories
 
         # 构造sku函数（获取产品的详细描述
         color = back_data['description']['color']
-        outlook = back_data['description']['outlook']
-        memory = back_data['description']['memory']
-        storage = back_data['description']['storage']
-        order.sku = str(color) + ',' + str(outlook) + ',' + str(memory) + ',' + str(storage)
+        outlook = ''
+        memory = ''
+        storage = ''
+        if 'outlook' in back_data['description']:
+            outlook = back_data['description']['outlook']
+        if 'memory' in back_data['description']:
+            memory = back_data['description']['memory']
+            memory = str(memory) + '+'
+        if 'storage' in back_data['description']:
+            storage = back_data['description']['storage']
+        order.sku = str(color) + ',' + str(outlook) + ',' + str(memory) + str(storage)
 
         order.platform = back_data['platform']
         order.remark = back_data['remark']
