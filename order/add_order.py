@@ -103,13 +103,12 @@ def add_order():
                   example: failed
     '''
     if request.method == "POST":
-        order_info = request.get_json()
-        back_data = {}
-        back_data['user_id'] = order_info.get('userId')
+        get_data = request.get_json()
         # 获取order信息
-        order_info = order_info.get('order')
+        order_info = get_data.get('order')
         back_data = {
-            'type': order_info.get('productType')[-1],
+            'user_id': get_data.get('userId'),
+            'type': order_info.get('productType')[0],
             'name': order_info.get('productName'),
             'withAccessories': order_info.get('withAccessories'),
             'description': order_info.get('productDescription'),
