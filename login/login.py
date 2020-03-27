@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, session, Response
 import json
 from login.database import User, query_object, add_object
 from application import app
@@ -46,13 +46,16 @@ def login():
               example: 1
     '''
     if request.method == "POST":
+        # 设置session
+        session.permanent = True  # 默认31天过期
+
         # 获取数据 json
-        # user_info = json.loads(request.form.get('data'))
         user_info = request.get_json()
         back_data = {
             'username': user_info.get('username'),
             'password': user_info.get('password')
         }
+
         # 数据库查询
         result = query_object(back_data['username'], back_data['password'], ' ', 'login')
         if result != '':
@@ -61,11 +64,21 @@ def login():
             json_data = {
                 "uid": str(result)
             }
+            # 添加session
+            session['username'] = back_data['username']
+            session['uid'] = json_data['uid']
+            session['password'] = back_data['password']
+            # 添加cookie 返回uid
+            cookie = Response()
+            cookie.set_cookie('uid', json_data['uid'])
+
             app.logger.info('%s logged in successfully',back_data['username'])
-            return json.dumps(json_data), 200
+
+            response = Response(json.dumps(json_data), content_type='application/json')
+            return response, 200
     # print(request.form.to_dict())
     # 登录失败 返回状态码
-    app.logger.info('%S failed to login in ', back_data['username'])
+    app.logger.info('%s failed to login in ', back_data['username'])
     json_data = {
         "msg": "账户未注册或被封禁"
     }
@@ -118,9 +131,9 @@ def register():
         # 获取数据
         user_info = request.get_json()
         back_data = {
-            'username':user_info.get('username'),
-            'password':user_info.get('password'),
-            'email':user_info.get('email'),
+            'username': user_info.get('username'),
+            'password': user_info.get('password'),
+            'email': user_info.get('email'),
         }
         back_json = {
             'verified': True,
@@ -134,10 +147,12 @@ def register():
         if result == 1:
             back_json['reason'] = '用户名被占用'
             back_json['verified'] = False
+            app.logger.info('%s register failed ,reason : %s', back_data['username'], back_json['reason'])
         elif result == 2:
             back_json['reason'] = '已存在的邮箱地址，请直接登录'
             back_json['verified'] = False
-        elif(result == 3):
+            app.logger.info('%s register failed ,reason : %s', back_data['username'], back_json['reason'])
+        elif result == 3:
             # add new_account
             user = User()
             user.username = back_data['username']
@@ -145,5 +160,6 @@ def register():
             user.email = back_data['email']
             user.isActive = 1
             add_object(user)
+            app.logger.info('%s register successfully ', back_data['username'])
 
     return json.dumps(back_json), 200

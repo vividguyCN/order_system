@@ -1,5 +1,6 @@
 from flask import request
 import json
+import datetime
 from order.order_database import Order, Money, Buyer, add_object
 from application import app
 
@@ -124,6 +125,7 @@ def add_order():
 
         # TODO user_id 从前端获取
         order.user_id = back_data['user_id']
+        order.time = datetime.datetime.now()
         order.type = back_data['type']
         order.name = back_data['name']
 

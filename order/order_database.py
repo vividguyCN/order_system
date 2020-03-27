@@ -11,6 +11,7 @@ class Order(db.Model):
     __tablename__ = 'info'
     id = db.Column(db.Integer,primary_key=True)
     user_id = db.Column(db.Integer, unique=True)
+    time = db.Column(db.DateTime, unique=True)
     type = db.Column(db.String(255),unique=True)
     name = db.Column(db.String(255),unique=True)
     sku = db.Column(db.String(255),unique=True)
@@ -69,6 +70,7 @@ def get_all_orders(order, money, buyer, page):
             continue
 
         data = {
+            "datetime": str(order_data.time),
             "name": order_data.name,
             "type": order_data.type,
             "income": money_data.income,

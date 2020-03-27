@@ -29,7 +29,7 @@ def get_order():
           properties:
             orderList:
               type: list
-              example: [{"productName": "iPhone","productType": "Phone", "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"purchaser": "张三","contact": 182****9597}]
+              example: [{"datetime": "2020-03-27 02:38:47","productName": "iPhone","productType": "Phone", "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"purchaser": "张三","contact": 182****9597}]
     '''
     if request.method == "POST":
         # 前端怎么发送page?

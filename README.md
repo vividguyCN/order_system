@@ -29,6 +29,7 @@ CREATE TABLE `login` (
 CREATE TABLE `info`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		`user_id` int(11) UNSIGNED NOT NULL,
+        `time` TIMESTAMP NOT NULL,
 		`type` TINYTEXT NOT NULL,
 		`name` TINYTEXT NOT NULL,
 		`sku` TINYTEXT,
