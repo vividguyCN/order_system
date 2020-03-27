@@ -68,15 +68,10 @@ def login():
             session['username'] = back_data['username']
             session['uid'] = json_data['uid']
             session['password'] = back_data['password']
-            # 添加cookie 返回uid
-            cookie = Response()
-            cookie.set_cookie('uid', json_data['uid'])
 
             app.logger.info('%s logged in successfully',back_data['username'])
 
-            response = Response(json.dumps(json_data), content_type='application/json')
-            return response, 200
-    # print(request.form.to_dict())
+            return json.dumps(json_data), 200
     # 登录失败 返回状态码
     app.logger.info('%s failed to login in ', back_data['username'])
     json_data = {

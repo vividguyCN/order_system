@@ -4,7 +4,7 @@ from order.order_database import Order, Money, Buyer, get_all_orders
 from application import app
 
 
-@app.route("/api/get_order", methods=["POST"])
+@app.route("/api/GetOrder", methods=["POST"])
 def get_order():
     '''
     Call this api to get all orders
@@ -28,7 +28,7 @@ def get_order():
         OrderList:
           properties:
             orderList:
-              type: list
+              type: array
               example: [{"datetime": "2020-03-27 02:38:47","productName": "iPhone","productType": "Phone", "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"purchaser": "张三","contact": 182****9597}]
     '''
     if request.method == "POST":

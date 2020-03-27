@@ -4,7 +4,7 @@ import datetime
 from order.order_database import Order, Money, Buyer, add_object
 from application import app
 
-@app.route("/api/add_order", methods=["POST"])
+@app.route("/api/AddOrder", methods=["POST"])
 def add_order():
     '''
         This is the insert order API
@@ -13,78 +13,79 @@ def add_order():
         tags:
          - AddOrder
         parameters:
-         - name: user_id
+         - name: userId
            in: body
            type: integer
            required: true
            description: 插入订单人id
            example: 1
-         - name: productType
+         - name: order
            in: body
-           type: string
+           type: object
            required: true
-           description: 产品类型
-           example: Phone
-         - name: productName
-           in: body
-           type: string
-           required: true
-           description: 产品名称
-           example: iPhone
-         - name: withAccessories
-           in: body
-           type: Boolean
-           required: true
-           description: 是否需要配件
-           example: 1
-         - name: accessories
-           in: body
-           type: array
-           required: true
-           description: 具体配件列表
-           example: ["充电器"]
-         - name: ProductDescription
-           in: body
-           type: dict
-           required: true
-           description: 机器的详细描述（颜色，外观，内存，储存）
-           example: {"color":"silver","outlook":"新","memory":"16G","storage":"1024"}
-         - name: platform
-           in: body
-           type: string
-           required: true
-           description: 出售平台
-           example: vx
-         - name: purchasePrice
-           in: body
-           type: integer
-           required: true
-           description: 进价
-           example: 1000
-         - name: soldPrice
-           in: body
-           type: integer
-           required: true
-           description: 售价
-           example: 2000
-         - name: postPrice
-           in: body
-           type: integer
-           required: true
-           description: 邮费
-           example: 10
-         - name: purchaser
-           in: body
-           type: string
-           required: true
-           description: 购买人
-           example: W
-         - name: contact
-           in: body
-           type: string
-           required: true
-           description: 联系方式
-           example: 182****9597
+           description: 需要的订单数据
+           properties:
+                productType:
+                    type: array
+                    description: 产品类型
+                    example: ['Pad']
+                productName:
+                    type: string
+                    description: 产品名称
+                    example: iPhone
+                withAccessories:
+                    type: Boolean
+                    description: 是否需要配件
+                    example: 1
+                accessories:
+                    type: array
+                    description: 具体配件列表
+                    example: ["Mouse"]
+                productDescription:
+                    type: object
+                    description: 机器的详细描述（颜色，外观，内存，储存）
+                    properties:
+                        color:
+                            type: string
+                            description: 颜色
+                            example: silver
+                        outlook:
+                            type: string
+                            description: 外观
+                            example: 新
+                        storage:
+                            type: string
+                            description: 内存
+                            example: 1024
+
+                platform:
+                    type: string
+                    description: 出售平台
+                    example: vx
+                money:
+                    type: object
+                    description: 钱
+                    properties:
+                        purchasePrice:
+                            type: integer
+                            description: 进价
+                            example: 1000
+                        soldPrice:
+                            type: integer
+                            description: 售价
+                            example: 2000
+                        postPrice:
+                            type: integer
+                            description: 邮费
+                            example: 10
+                purchaser:
+                    type: string
+                    description: 购买人
+                    example: W
+                contact:
+                    type: string
+                    description: 联系方式
+                    example: 182****9597
         responses:
           200:
            description: 插入订单成功，返回一个状态success

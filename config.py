@@ -2,8 +2,6 @@ import os
 
 # 配置数据库
 DEBUG = True
-SQLALCHEMY_ECHO = False
-SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECREET_KEY = os.urandom(24)
 HOSTNAME = 'localhost'
 PORT = '3306'
