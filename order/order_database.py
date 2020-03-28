@@ -61,9 +61,19 @@ def add_object(order,money,buyer):
 def get_all_orders(order, money, buyer, page):
     order_list = []
     # page1 : 1~50,page2 : 51~100
-    start = (page - 1) * 50 + 1
     num = order.query.count()
-    len = range(start, num + 1)
+
+    if num > 50:
+        start = num - page * 50 + 1
+        if start < 0 :
+            start = 1
+        end = num - (page - 1) * 50
+        # num = end - start + 1
+    else:
+        start = 1
+        end = num
+
+    len = range(end, start - 1, -1)  # 逆序
     for i in len:
         order_data = order.query.get(i)
         money_data = money.query.get(i)
@@ -95,8 +105,6 @@ def get_all_orders(order, money, buyer, page):
         # data_json = json.dumps(data)
         order_list.append(data)
 
-    print(type(data["productType"]))
-    print(type(data["productDescription"]))
     back_data = {
         'orderList': order_list,
         'total': num
