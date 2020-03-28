@@ -144,7 +144,7 @@ def add_order():
             accessories = ''
             for i in range(len(order_info.get('accessories'))):
                 accessories = accessories + str(order_info.get('accessories')[i])
-                if i != len(order_info.get('accessories')):
+                if i != len(order_info.get('accessories')) - 1:
                     accessories = accessories + '/'
             order.accessories = accessories
 

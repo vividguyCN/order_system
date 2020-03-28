@@ -68,7 +68,8 @@ def get_all_orders(order, money, buyer, page):
         order_data = order.query.get(i)
         money_data = money.query.get(i)
         buyer_data = buyer.query.get(i)
-        if(order_data == None ):
+
+        if order_data == None:
             continue
 
         data = {
@@ -83,8 +84,13 @@ def get_all_orders(order, money, buyer, page):
             "profit": money_data.profit,
             "purchaser": buyer_data.purchaser,
             "contact": buyer_data.contact,
-            "platform": order_data.platform
+            "platform": order_data.platform,
         }
+        if order_data.accessories != None:
+            data['accessories'] = order_data.accessories.split('/')
+        if order_data.note != '':
+            data['note'] = order_data.note
+
         # 在server层转换json会在结果中多出很多\
         # data_json = json.dumps(data)
         order_list.append(data)
