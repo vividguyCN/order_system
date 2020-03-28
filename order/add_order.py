@@ -4,7 +4,7 @@ import datetime
 from order.order_database import Order, Money, Buyer, add_object
 from application import app
 
-@app.route("/api/AddOrder", methods=["POST"])
+@app.route("/api/addOrder", methods=["POST"])
 def add_order():
     '''
         This is the insert order API

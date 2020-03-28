@@ -4,7 +4,7 @@ from order.order_database import Order, Money, Buyer, get_all_orders
 from application import app
 
 
-@app.route("/api/GetOrder", methods=["POST"])
+@app.route("/api/getOrder", methods=["POST"])
 def get_order():
     '''
     Call this api to get all orders
@@ -29,7 +29,10 @@ def get_order():
           properties:
             orderList:
               type: array
-              example: [{"datetime": "2020-03-27 02:38:47","productName": "iPhone","productType": "Phone", "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"purchaser": "张三","contact": 182****9597}]
+              example: [{"datetime": "2020-03-27 02:38:47","productName": "iPhone","productType": "Phone","sku": "sliver,全新,8+256G", "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"purchaser": "张三","contact": 182****9597}]
+            total:
+              type: integer
+              example: 1
     '''
     if request.method == "POST":
         # 前端怎么发送page?
@@ -41,8 +44,8 @@ def get_order():
         buyer = Buyer()
 
         order_list = get_all_orders(order,money,buyer,page)
-        back_json ={
-            'orderlist': order_list
+        back_json = {
+            'orderList': order_list
         }
 
-    return json.dumps(back_json),200
+    return json.dumps(back_json), 200

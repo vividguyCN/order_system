@@ -61,7 +61,8 @@ def get_all_orders(order, money, buyer, page):
     order_list = []
     # page1 : 1~50,page2 : 51~100
     start = (page - 1) * 50 + 1
-    len = range(start, order.query.count() + 1)
+    num = order.query.count()
+    len = range(start, num + 1)
     for i in len:
         order_data = order.query.get(i)
         money_data = money.query.get(i)
@@ -73,6 +74,7 @@ def get_all_orders(order, money, buyer, page):
             "datetime": str(order_data.time),
             "name": order_data.name,
             "type": order_data.type,
+            "sku": order_data.sku,
             "income": money_data.income,
             "sold": money_data.sold,
             "post": money_data.post,
@@ -85,7 +87,11 @@ def get_all_orders(order, money, buyer, page):
         # data_json = json.dumps(data)
         order_list.append(data)
 
-    return order_list
+    back_data = {
+        'orderList': order_list,
+        'total': num
+    }
+    return back_data
 
 # TODO 查找订单
 
