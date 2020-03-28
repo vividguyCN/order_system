@@ -4,6 +4,7 @@ import datetime
 from order.order_database import Order, Money, Buyer, add_object
 from application import app
 
+
 @app.route("/api/addOrder", methods=["POST"])
 def add_order():
     '''
@@ -57,7 +58,6 @@ def add_order():
                             type: string
                             description: 内存
                             example: 1024
-
                 platform:
                     type: string
                     description: 出售平台
@@ -107,62 +107,59 @@ def add_order():
         # 获取order信息
         order_info = get_data.get('order')
         back_data = {
-            'user_id': get_data.get('userId'),
-            'type': order_info.get('productType')[0],
-            'name': order_info.get('productName'),
+            'userId': get_data.get('userId'),
+            'productType': order_info.get('productType'),
+            'productName': order_info.get('productName'),
             'withAccessories': order_info.get('withAccessories'),
-            'description': order_info.get('productDescription'),
+            'productDescription': order_info.get('productDescription'),
             'platform': order_info.get('platform'),
-            'income': order_info.get('money')['purchasePrice'],
-            'sold': order_info.get('money')['soldPrice'],
-            'post': order_info.get('money')['postPrice'],
+            'purchasePrice': order_info.get('money')['purchasePrice'],
+            'soldPrice': order_info.get('money')['soldPrice'],
+            'postPrice': order_info.get('money')['postPrice'],
             'purchaser': order_info.get('purchaser'),
             'contact': order_info.get('contact'),
-            'remark': order_info.get('note')
+            'note': order_info.get('note')
         }
         order = Order()
         money = Money()
         buyer = Buyer()
 
         # TODO user_id 从前端获取
-        order.user_id = back_data['user_id']
-        order.time = datetime.datetime.now()
-        order.type = back_data['type']
-        order.name = back_data['name']
+        order.userId = back_data['userId']
+        order.dateTime = datetime.datetime.now()
+
+        # 将productType 以字符串存入
+        product_type = ''
+        for i in range(len(back_data['productType'])):
+            product_type = product_type + str(back_data['productType'][i])
+            if i != len(back_data['productType']) - 1:
+                product_type = product_type + '/'
+
+        order.productType = product_type
+        order.productName = back_data['productName']
 
         # 如果包含配件 加入配件字段
-        # TODO 可能需要处理配件数组
         order.withAccessories = back_data['withAccessories']
-        if(back_data['withAccessories']):
+        if back_data['withAccessories']:
             accessories = ''
             for i in range(len(order_info.get('accessories'))):
-                accessories = accessories + str(order_info.get('accessories')[i]) + '/'
+                accessories = accessories + str(order_info.get('accessories')[i])
+                if i != len(order_info.get('accessories')):
+                    accessories = accessories + '/'
             order.accessories = accessories
 
-        # 构造sku函数（获取产品的详细描述
-        color = back_data['description']['color']
-        outlook = ''
-        memory = ''
-        storage = ''
-        if 'outlook' in back_data['description']:
-            outlook = back_data['description']['outlook']
-        if 'memory' in back_data['description']:
-            memory = back_data['description']['memory']
-            memory = str(memory) + '+'
-        if 'storage' in back_data['description']:
-            storage = back_data['description']['storage']
-        order.sku = str(color) + ',' + str(outlook) + ',' + str(memory) + str(storage)
+        order.productDescription = str(back_data['productDescription'])
 
         order.platform = back_data['platform']
-        order.remark = back_data['remark']
+        order.note = back_data['note']
         order.isActive = 1
 
-        money.income = back_data['income']
-        money.sold = back_data['sold']
-        money.post = back_data['post']
-        money.profit = money.sold - money.income - money.post
+        money.purchasePrice = back_data['purchasePrice']
+        money.soldPrice = back_data['soldPrice']
+        money.postPrice = back_data['postPrice']
+        money.profit = money.soldPrice - money.purchasePrice - money.postPrice
 
-        buyer.name = back_data['purchaser']
+        buyer.purchaser = back_data['purchaser']
         buyer.contact = back_data['contact']
 
         # TODO 增加异常处理（数据库回滚）,增加insert失败

@@ -28,31 +28,31 @@ CREATE TABLE `login` (
 
 CREATE TABLE `info`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-		`user_id` int(11) UNSIGNED NOT NULL,
-        `time` TIMESTAMP NOT NULL,
-		`type` TINYTEXT NOT NULL,
-		`name` TINYTEXT NOT NULL,
-		`sku` TINYTEXT,
+		`userId` int(11) UNSIGNED NOT NULL,
+        `dateTime` TIMESTAMP NOT NULL,
+		`productType` TINYTEXT NOT NULL,
+		`productName` TINYTEXT NOT NULL,
+		`productDescription` TINYTEXT,
 		`withAccessories` bit NOT NULL DEFAULT 0,
         `accessories` TINYTEXT,
 		`platform` TINYTEXT NOT NULL,
-		`remark` TINYTEXT,
+		`note` TINYTEXT,
 		`isActive` bit NOT NULL DEFAULT 1,
 		PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `money`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-		`income` int(11) UNSIGNED NOT NULL,
-		`sold` int(11) UNSIGNED NOT NULL,
-		`post` int(11) UNSIGNED DEFAULT 0,
+		`purchasePrice` int(11) UNSIGNED NOT NULL,
+		`soldPrice` int(11) UNSIGNED NOT NULL,
+		`postPrice` int(11) UNSIGNED DEFAULT 0,
 		`profit` int(11) NOT NULL,
 		PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `purchaser`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-		`name` TINYTEXT NOT NULL,
+		`purchaser` TINYTEXT NOT NULL,
 		`contact` TINYTEXT,
 		PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

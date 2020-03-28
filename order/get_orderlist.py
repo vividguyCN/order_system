@@ -29,13 +29,12 @@ def get_order():
           properties:
             orderList:
               type: array
-              example: [{"orderId": 1,"datetime": "2020-03-27 02:38:47","productName": "iPhone","productType": "Phone","sku": "sliver,全新,8+256G", "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"platform":"vx","purchaser": "张三","contact": 182****9597}]
+              example: [{"orderId": 1,"dateTime": "2020-03-27 02:38:47","productName": "iPhone","productType": ["Phone","Apple"],"productDescription": {"color":"sliver","outlook":"全新"}, "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"platform":"vx","purchaser": "张三","contact": 182****9597}]
             total:
               type: integer
               example: 1
     '''
     if request.method == "POST":
-        # 前端怎么发送page?
         page = request.get_json()
         page = int(page.get('page'))
 

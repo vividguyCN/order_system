@@ -5,32 +5,33 @@ from config import DB_URI
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
 db = SQLAlchemy(app,use_native_unicode='utf8')
 
-# 数据库类型
+
 class Order(db.Model):
     # order info
     __tablename__ = 'info'
     id = db.Column(db.Integer,primary_key=True)
-    user_id = db.Column(db.Integer, unique=True)
-    time = db.Column(db.DateTime, unique=True)
-    type = db.Column(db.String(255),unique=True)
-    name = db.Column(db.String(255),unique=True)
-    sku = db.Column(db.String(255),unique=True)
+    userId = db.Column(db.Integer, unique=True)
+    dateTime = db.Column(db.DateTime, unique=True)
+    productType = db.Column(db.String(255),unique=True)
+    productName = db.Column(db.String(255),unique=True)
+    productDescription = db.Column(db.String(255),unique=True)
     withAccessories = db.Column(db.Boolean, unique=True)
     accessories = db.Column(db.String(255),unique=True)
     platform = db.Column(db.String(255),unique=True)
-    remark = db.Column(db.String(255),unique=True)
+    note = db.Column(db.String(255),unique=True)
     isActive = db.Column(db.Boolean,unique=True)
     def __repr__(self):
         # 只返回订单id
-        return '<Order id:%r name:%r sku:%r>' % (self.id,self.name,self.sku)
+        return '<Order id:%r name:%r sku:%r>' % (self.id,self.productName,self.productDescription)
+
 
 class Money(db.Model):
     # order money
     _tablename_ = 'money'
     id = db.Column(db.Integer,primary_key=True)
-    income = db.Column(db.Integer, unique=True)
-    sold = db.Column(db.Integer, unique=True)
-    post = db.Column(db.Integer, unique=True)
+    purchasePrice = db.Column(db.Integer, unique=True)
+    soldPrice = db.Column(db.Integer, unique=True)
+    postPrice = db.Column(db.Integer, unique=True)
     profit = db.Column(db.Integer, unique=True)
     def __repr__(self):
         return '<Money id:%r profit%r>' % (self.id,self.profit)
@@ -40,10 +41,10 @@ class Buyer(db.Model):
     # purchaser info
     __tablename__ = 'purchaser'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255),unique=True)
+    purchaser = db.Column(db.String(255),unique=True)
     contact = db.Column(db.String(255),unique=True)
     def __repr__(self):
-        return '<Purchaser name:%r contact:%r>' % (self.name,self.contact)
+        return '<Purchaser name:%r contact:%r>' % (self.purchaser,self.contact)
 
 
 # 新增订单
@@ -72,15 +73,15 @@ def get_all_orders(order, money, buyer, page):
 
         data = {
             "orderId": order_data.id,
-            "datetime": str(order_data.time),
-            "name": order_data.name,
-            "type": order_data.type,
-            "sku": order_data.sku,
-            "income": money_data.income,
-            "sold": money_data.sold,
-            "post": money_data.post,
+            "dateTime": str(order_data.dateTime),
+            "productName": order_data.productName,
+            "productType": order_data.productType.split('/'),
+            "productDescription": eval(order_data.productDescription),
+            "purchasePrice": money_data.purchasePrice,
+            "soldPrice": money_data.soldPrice,
+            "postPrice": money_data.postPrice,
             "profit": money_data.profit,
-            "purchaser": buyer_data.name,
+            "purchaser": buyer_data.purchaser,
             "contact": buyer_data.contact,
             "platform": order_data.platform
         }
@@ -88,6 +89,8 @@ def get_all_orders(order, money, buyer, page):
         # data_json = json.dumps(data)
         order_list.append(data)
 
+    print(type(data["productType"]))
+    print(type(data["productDescription"]))
     back_data = {
         'orderList': order_list,
         'total': num
