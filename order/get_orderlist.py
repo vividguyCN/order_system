@@ -42,9 +42,6 @@ def get_order():
         money = Money()
         buyer = Buyer()
 
-        order_list = get_all_orders(order,money,buyer,page)
-        back_json = {
-            'orderList': order_list
-        }
+        back_json = get_all_orders(order,money,buyer,page)
 
     return json.dumps(back_json), 200
