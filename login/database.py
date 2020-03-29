@@ -31,7 +31,7 @@ def query_object(u_name, u_psd, u_email, type):
         result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).first()
         if result != None and result.isActive == 1:
             # 查询有结果并且允许登录 返回uid
-            return result.uid
+            return result
         else:
             return ''  # login failed
     elif type == 'register' or 'edit_info':

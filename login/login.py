@@ -58,16 +58,18 @@ def login():
 
         # 数据库查询
         result = query_object(back_data['username'], back_data['password'], ' ', 'login')
-        if result != '':
+        uid = result.uid
+        if uid != '':
             # 对登录成功的用户，返回状态码和json
             # json使用字典
             json_data = {
-                "uid": str(result)
+                "uid": str(uid)
             }
             # 添加session
             session['username'] = back_data['username']
             session['uid'] = json_data['uid']
             session['password'] = back_data['password']
+            session['email'] = result.email
 
             app.logger.info('%s logged in successfully', back_data['username'])
 
