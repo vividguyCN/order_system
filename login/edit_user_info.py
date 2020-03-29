@@ -77,7 +77,9 @@ def editUserInfo():
         uid = int(session['uid'])
 
         # 查询可否修改
-        if new_info['new_name'] == session['username']:
+        if new_info['new_email'] == session['email'] and new_info['new_name'] == session['username']:
+            result = 0
+        elif new_info['new_name'] == session['username']:
             result = query_object('','',new_info['new_email'],'edit_info')
         elif new_info['new_email'] == session['email']:
             result = query_object(new_info['new_name'], '', '', 'edit_info')
@@ -85,15 +87,16 @@ def editUserInfo():
             result = query_object(new_info['new_name'], '', new_info['new_email'], 'edit_info')
 
         back_json['status'] = 'failed'
-        if result == 1:
+        if result == 0:
+            back_json['status'] = 'success'
+        elif result == 1:
             back_json['reason'] = '用户名被占用'
         elif result == 2:
             back_json['reason'] = '邮箱已注册'
         elif result == 3:
             edit_user_info(uid, 1, new_info)
             back_json['status'] = 'success'
-
-        app.logger.info('%s change name to %s', session['username'],new_info['new_name'])
+            app.logger.info('%s change name to %s', session['username'],new_info['new_name'])
 
         # 如果用户申请修改密码
         if data.get('changePassword') == 1:
