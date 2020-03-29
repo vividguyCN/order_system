@@ -25,17 +25,18 @@ def add_object(user):
 
 # username 和 psd 查找
 def query_object(u_name, u_psd, u_email, type):
-    if(type == 'login'):
+    if type == 'login':
         # login success return uid
-        print('login')
+        # print('login')
         result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).first()
-        if(result != None and result.isActive == 1):
+        if result != None and result.isActive == 1:
             # 查询有结果并且允许登录 返回uid
             return result.uid
         else:
             return ''  # login failed
-    elif(type == 'register'):
-        print('register')
+    elif type == 'register' or 'edit_info':
+        # 注册或者修改用户信息
+        # print('register')
         result = User.query.filter(or_(User.username == u_name, User.email == u_email)).all()
         if(result != []):
             if User.query.filter(User.email == u_email).all():
@@ -46,4 +47,29 @@ def query_object(u_name, u_psd, u_email, type):
             return 3  # register success
 
 
-# db.create_all()
+def query_user_psd(uid):
+    result = User.query.get(uid)
+    if result != None:
+        back_data = {
+            'password': result.password
+        }
+        return back_data
+    else:
+        return 'failed'
+
+
+def edit_user_info(uid, change, new_info):
+    # 修改用户名和邮箱
+    new_name = new_info['new_name']
+    new_email = new_info['new_email']
+    user = User.query.get(uid)
+    user.username = new_name
+    user.email = new_email
+    if change == 2:
+        # 修改密码
+        new_psd = new_info['new_psd']
+        user.password = new_psd
+    # update database
+    login_db.session.commit()
+
+    return 1

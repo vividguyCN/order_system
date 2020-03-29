@@ -60,12 +60,12 @@ def add_object(order,money,buyer):
 
 def get_all_orders(order, money, buyer, page):
     order_list = []
-    # page1 : 1~50,page2 : 51~100
+
     num = order.query.count()
 
     if num > 50:
         start = num - page * 50 + 1
-        if start < 0 :
+        if start < 0:
             start = 1
         end = num - (page - 1) * 50
         # num = end - start + 1

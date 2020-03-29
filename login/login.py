@@ -69,7 +69,7 @@ def login():
             session['uid'] = json_data['uid']
             session['password'] = back_data['password']
 
-            app.logger.info('%s logged in successfully',back_data['username'])
+            app.logger.info('%s logged in successfully', back_data['username'])
 
             return json.dumps(json_data), 200
     # 登录失败 返回状态码

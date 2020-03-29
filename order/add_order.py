@@ -113,7 +113,7 @@ def add_order():
     if request.method == "POST":
         get_data = request.get_json()
 
-        # 生成随机数据s
+        # 生成随机数据
         # get_data = eval(create_data())
 
         # 获取order信息
@@ -180,4 +180,6 @@ def add_order():
             "status": "success"
         }
 
+
+    app.logger.info('%s insert order successfully', back_data['userId'])
     return json.dumps(back_json),200
