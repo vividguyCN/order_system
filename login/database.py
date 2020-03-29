@@ -38,7 +38,7 @@ def query_object(u_name, u_psd, u_email, type):
         # 注册或者修改用户信息
         # print('register')
         result = User.query.filter(or_(User.username == u_name, User.email == u_email)).all()
-        if(result != []):
+        if result != []:
             if User.query.filter(User.email == u_email).all():
                 return 2  # same email
             elif User.query.filter(User.username == u_name).all():

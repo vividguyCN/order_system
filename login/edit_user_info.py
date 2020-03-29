@@ -96,6 +96,8 @@ def editUserInfo():
         elif result == 3:
             edit_user_info(uid, 1, new_info)
             back_json['status'] = 'success'
+            session['username'] = new_info['new_name']
+            session['email'] = new_info['new_email']
             app.logger.info('%s change name to %s', session['username'],new_info['new_name'])
 
         # 如果用户申请修改密码
@@ -109,14 +111,11 @@ def editUserInfo():
                 new_info['new_psd'] = new_password
                 edit_user_info(uid, 2, new_info)
                 back_json['status'] = 'success'
+                session['password'] = new_password
                 app.logger.info('%s change password', session['username'])
             else:
                 # 考虑优先级问题
                 back_json['reason'] = '原密码输入错误'
-
-        # 重新设置session
-        session['username'] = new_info['new_name']
-        session['email'] = new_info['new_email']
 
     return json.dumps(back_json), 200
 
