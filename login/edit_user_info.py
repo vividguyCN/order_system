@@ -1,4 +1,4 @@
-from flask import request, session, Response
+from flask import request, session
 import json
 from login.database import query_object, query_user_psd, edit_user_info
 from application import app
@@ -77,7 +77,13 @@ def editUserInfo():
         uid = int(session['uid'])
 
         # 查询可否修改
-        result = query_object(new_info['new_name'], '', new_info['new_email'], 'edit_info')
+        if new_info['new_name'] == session['username']:
+            result = query_object('','',new_info['new_email'],'edit_info')
+        elif new_info['new_email'] == session['email']:
+            result = query_object(new_info['new_name'], '', '', 'edit_info')
+        else:
+            result = query_object(new_info['new_name'], '', new_info['new_email'], 'edit_info')
+
         back_json['status'] = 'failed'
         if result == 1:
             back_json['reason'] = '用户名被占用'
@@ -93,9 +99,7 @@ def editUserInfo():
         if data.get('changePassword') == 1:
             # 检查密码
             old_password = data.get('oldPassword')
-
-            # 数据库查询旧密码
-            psd = query_user_psd(uid)['password']
+            psd = session['password']
 
             if psd == old_password:
                 new_password = data.get('newPassword')
