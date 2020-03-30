@@ -1,19 +1,19 @@
 from flask import request, session
 import json
-from login.database import query_object, query_user_psd, edit_user_info
+from login.database import query_object,  edit_user
 from application import app
 import logging
 
 
-@app.route("/api/editUserInfo", methods=["POST"])
-def editUserInfo():
+@app.route("/api/editUserInfo", methods=["PUT"])
+def edit_user_info():
     """
     This is the EditUserInfo API
     Call this api to Edit user information
     ---
     tags:
       - EditUserInformation
-    post:
+    put:
       parameters:
         - name: username
           in: body
@@ -65,7 +65,7 @@ def editUserInfo():
                 description: 错误原因
                 example: 用户名已被占用
     """
-    if request.method == "POST":
+    if request.method == "PUT":
         # 获取数据 json
         data = request.get_json()
         back_json = dict()
@@ -94,7 +94,7 @@ def editUserInfo():
         elif result == 2:
             back_json['reason'] = '邮箱已注册'
         elif result == 3:
-            edit_user_info(uid, 1, new_info)
+            edit_user(uid, 1, new_info)
             back_json['status'] = 'success'
             session['username'] = new_info['new_name']
             session['email'] = new_info['new_email']
@@ -109,7 +109,7 @@ def editUserInfo():
             if psd == old_password:
                 new_password = data.get('newPassword')
                 new_info['new_psd'] = new_password
-                edit_user_info(uid, 2, new_info)
+                edit_user(uid, 2, new_info)
                 back_json['status'] = 'success'
                 session['password'] = new_password
                 app.logger.info('%s change password', session['username'])

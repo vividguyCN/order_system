@@ -15,11 +15,11 @@ class Order(db.Model):
     productType = db.Column(db.String(255),unique=True)
     productName = db.Column(db.String(255),unique=True)
     productDescription = db.Column(db.String(255),unique=True)
-    withAccessories = db.Column(db.Boolean, unique=True)
+    withAccessories = db.Column(db.Integer, unique=True)
     accessories = db.Column(db.String(255),unique=True)
     platform = db.Column(db.String(255),unique=True)
     note = db.Column(db.String(255),unique=True)
-    isActive = db.Column(db.Boolean,unique=True)
+    isActive = db.Column(db.Integer,unique=True)
     def __repr__(self):
         # 只返回订单id
         return '<Order id:%r name:%r sku:%r>' % (self.id,self.productName,self.productDescription)
@@ -111,5 +111,38 @@ def get_all_orders(order, money, buyer, page):
     }
     return back_data
 
-# TODO 查找订单
+
+def get_order(order_id):
+    order = Order.query.get(order_id)
+    money = Money.query.get(order_id)
+    purchaser = Buyer.query.get(order_id)
+    is_active = int.from_bytes(order.isActive, byteorder='big')
+
+    if is_active:
+        back_data = {
+            'productType': order.productType.split('/'),
+            'productName': order.productName,
+            'withAccessories': int.from_bytes(order.withAccessories, byteorder='big'),
+            'productDescription': order.productDescription,
+            'platform': order.platform,
+            'note': order.note,
+            "money": {
+                'purchasePrice': money.purchasePrice,
+                'soldPrice': money.soldPrice,
+                'postPrice': money.postPrice,
+            },
+            'purchaser': purchaser.purchaser,
+            'contact': purchaser.contact
+        }
+        if back_data['withAccessories']:
+            back_data['accessories'] = order.accessories.split('/')
+        return back_data
+    else:
+        return 'failed'
+
+
+def delete_order(order_id):
+    order = Order.query.get(order_id)
+    order.isActive = 0
+    return 1
 

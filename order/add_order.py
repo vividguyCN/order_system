@@ -136,7 +136,6 @@ def add_order():
         money = Money()
         buyer = Buyer()
 
-        # TODO user_id 从前端获取
         order.userId = back_data['userId']
         order.dateTime = datetime.datetime.now()
 

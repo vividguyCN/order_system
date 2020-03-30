@@ -47,18 +47,7 @@ def query_object(u_name, u_psd, u_email, type):
             return 3  # register success
 
 
-def query_user_psd(uid):
-    result = User.query.get(uid)
-    if result != None:
-        back_data = {
-            'password': result.password
-        }
-        return back_data
-    else:
-        return 'failed'
-
-
-def edit_user_info(uid, change, new_info):
+def edit_user(uid, change, new_info):
     # 修改用户名和邮箱
     new_name = new_info['new_name']
     new_email = new_info['new_email']

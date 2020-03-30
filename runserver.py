@@ -2,6 +2,7 @@ from login.login import *  # 调用登录模块
 from order.add_order import *  # 调用增加订单模块
 from order.get_orderlist import *  # 调用获取订单列表模块
 from login.edit_user_info import *
+from order.edit_order import *
 from application import app
 
 if __name__ == '__main__':
