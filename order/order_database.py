@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from application import app
 from config import DB_URI
+import datetime
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
 db = SQLAlchemy(app,use_native_unicode='utf8')
@@ -48,7 +49,7 @@ class Buyer(db.Model):
 
 
 # 新增订单
-def add_object(order,money,buyer):
+def add_object(order, money, buyer):
     db.session.add(order)
     db.session.add(money)
     db.session.add(buyer)
@@ -61,7 +62,7 @@ def add_object(order,money,buyer):
 def get_all_orders(order, money, buyer, page):
     order_list = []
 
-    num = order.query.count()
+    num = order.query.filter_by(isActive=1).count()
 
     if num > 50:
         start = num - page * 50 + 1
@@ -146,3 +147,64 @@ def delete_order(order_id):
     order.isActive = 0
     return 1
 
+
+def edit_order_info(data):
+    order_id = data.get('orderId')
+    order = Order.query.get(order_id)
+    money = Money.query.get(order_id)
+    buyer = Buyer.query.get(order_id)
+
+    order_info = data.get('order')
+    back_data = {
+        'userId': data.get('userId'),
+        'productType': order_info.get('productType'),
+        'productName': order_info.get('productName'),
+        'withAccessories': order_info.get('withAccessories'),
+        'productDescription': order_info.get('productDescription'),
+        'platform': order_info.get('platform'),
+        'purchasePrice': order_info.get('money')['purchasePrice'],
+        'soldPrice': order_info.get('money')['soldPrice'],
+        'postPrice': order_info.get('money')['postPrice'],
+        'purchaser': order_info.get('purchaser'),
+        'contact': order_info.get('contact'),
+        'note': order_info.get('note')
+    }
+    order.userId = back_data['userId']
+    order.dateTime = datetime.datetime.now()
+
+    # 将productType 以字符串存入
+    product_type = ''
+    for i in range(len(back_data['productType'])):
+        product_type = product_type + str(back_data['productType'][i])
+        if i != len(back_data['productType']) - 1:
+            product_type = product_type + '/'
+
+    order.productType = product_type
+    order.productName = back_data['productName']
+
+    # 如果包含配件 加入配件字段
+    order.withAccessories = back_data['withAccessories']
+    if back_data['withAccessories']:
+        accessories = ''
+        for i in range(len(order_info.get('accessories'))):
+            accessories = accessories + str(order_info.get('accessories')[i])
+            if i != len(order_info.get('accessories')) - 1:
+                accessories = accessories + '/'
+        order.accessories = accessories
+
+    order.productDescription = str(back_data['productDescription'])
+
+    order.platform = back_data['platform']
+    order.note = back_data['note']
+    order.isActive = 1
+
+    money.purchasePrice = back_data['purchasePrice']
+    money.soldPrice = back_data['soldPrice']
+    money.postPrice = back_data['postPrice']
+    money.profit = money.soldPrice - money.purchasePrice - money.postPrice
+
+    buyer.purchaser = back_data['purchaser']
+    buyer.contact = back_data['contact']
+
+    db.session.commit()
+    return 1
