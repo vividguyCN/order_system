@@ -13,7 +13,7 @@ class User(login_db.Model):
     username = login_db.Column(login_db.String(255), unique=True)
     password = login_db.Column(login_db.String(255), unique=True)
     email = login_db.Column(login_db.String(255), unique=True)
-    isActive = login_db.Column(login_db.Boolean, unique=True)  # 记录用户封禁状态
+    isActive = login_db.Column(login_db.Integer, unique=True)  # 记录用户封禁状态
 
     def __repr__(self):
         return '<User uid:%r username:%r password: %r email:%r>' % (self.uid, self.username,self.password,self.email)
@@ -29,7 +29,7 @@ def query_object(u_name, u_psd, u_email, type):
         # login success return uid
         # print('login')
         result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).first()
-        if result != None and result.isActive == 1:
+        if result != None and int.from_bytes(result.isActive, byteorder='big') == 1:
             # 查询有结果并且允许登录 返回uid
             return result
         else:

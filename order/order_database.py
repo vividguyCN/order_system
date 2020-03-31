@@ -62,8 +62,8 @@ def add_object(order, money, buyer):
 def get_all_orders(order, money, buyer, page):
     order_list = []
 
-    num = order.query.filter_by(isActive=1).count()
-
+    num = order.query.count()
+    total = order.query.filter_by(isActive=1).count()
     if num > 50:
         start = num - page * 50 + 1
         if start < 0:
@@ -74,13 +74,13 @@ def get_all_orders(order, money, buyer, page):
         start = 1
         end = num
 
-    len = range(end, start - 1, -1)  # 逆序
-    for i in len:
+    length = range(end, start - 1, -1)  # 逆序
+    for i in length:
         order_data = order.query.get(i)
         money_data = money.query.get(i)
         buyer_data = buyer.query.get(i)
 
-        if order_data == None:
+        if order_data == None or int.from_bytes(order_data.isActive, byteorder='big') == 0:
             continue
 
         data = {
@@ -108,7 +108,7 @@ def get_all_orders(order, money, buyer, page):
 
     back_data = {
         'orderList': order_list,
-        'total': num
+        'total': total
     }
     return back_data
 
@@ -121,22 +121,22 @@ def get_order(order_id):
 
     if is_active:
         back_data = {
-            'productType': order.productType.split('/'),
-            'productName': order.productName,
-            'withAccessories': int.from_bytes(order.withAccessories, byteorder='big'),
-            'productDescription': order.productDescription,
-            'platform': order.platform,
-            'note': order.note,
+            "productType": order.productType.split('/'),
+            "productName": order.productName,
+            "withAccessories": int.from_bytes(order.withAccessories, byteorder='big'),
+            "productDescription": order.productDescription,
+            "platform": order.platform,
+            "note": order.note,
             "money": {
-                'purchasePrice': money.purchasePrice,
-                'soldPrice': money.soldPrice,
-                'postPrice': money.postPrice,
+                "purchasePrice": money.purchasePrice,
+                "soldPrice": money.soldPrice,
+                "postPrice": money.postPrice,
             },
-            'purchaser': purchaser.purchaser,
-            'contact': purchaser.contact
+            "purchaser": purchaser.purchaser,
+            "contact": purchaser.contact
         }
-        if back_data['withAccessories']:
-            back_data['accessories'] = order.accessories.split('/')
+        if back_data["withAccessories"]:
+            back_data["accessories"] = order.accessories.split('/')
         return back_data
     else:
         return 'failed'
@@ -156,18 +156,18 @@ def edit_order_info(data):
 
     order_info = data.get('order')
     back_data = {
-        'userId': data.get('userId'),
-        'productType': order_info.get('productType'),
-        'productName': order_info.get('productName'),
-        'withAccessories': order_info.get('withAccessories'),
-        'productDescription': order_info.get('productDescription'),
-        'platform': order_info.get('platform'),
-        'purchasePrice': order_info.get('money')['purchasePrice'],
-        'soldPrice': order_info.get('money')['soldPrice'],
-        'postPrice': order_info.get('money')['postPrice'],
-        'purchaser': order_info.get('purchaser'),
-        'contact': order_info.get('contact'),
-        'note': order_info.get('note')
+        "userId": data.get('userId'),
+        "productType": order_info.get('productType'),
+        "productName": order_info.get('productName'),
+        "withAccessories": order_info.get('withAccessories'),
+        "productDescription": order_info.get('productDescription'),
+        "platform": order_info.get('platform'),
+        "purchasePrice": order_info.get('money')['purchasePrice'],
+        "soldPrice": order_info.get('money')['soldPrice'],
+        "postPrice": order_info.get('money')['postPrice'],
+        "purchaser": order_info.get('purchaser'),
+        "contact": order_info.get('contact'),
+        "note": order_info.get('note')
     }
     order.userId = back_data['userId']
     order.dateTime = datetime.datetime.now()
