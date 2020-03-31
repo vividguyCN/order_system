@@ -124,7 +124,7 @@ def get_order(order_id):
             "productType": order.productType.split('/'),
             "productName": order.productName,
             "withAccessories": int.from_bytes(order.withAccessories, byteorder='big'),
-            "productDescription": order.productDescription,
+            "productDescription": eval(order.productDescription),
             "platform": order.platform,
             "note": order.note,
             "money": {
