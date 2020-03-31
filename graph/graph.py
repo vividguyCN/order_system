@@ -18,10 +18,10 @@ def get_week_graph():
       200:
        description: 获取图表成功,返回sales和profit
        schema:
-         $ref: "#/definitions/Graph"
+         $ref: "#/definitions/WeekGraph"
 
     definitions:
-        Graph:
+        WeekGraph:
           properties:
             sales:
               type: array
@@ -48,10 +48,10 @@ def get_month_graph():
       200:
        description: 获取图表成功,返回days,sales和profit
        schema:
-         $ref: "#/definitions/Graph"
+         $ref: "#/definitions/MonthGraph"
 
     definitions:
-        Graph:
+        MonthGraph:
           properties:
             days:
               type: string
