@@ -28,8 +28,8 @@ def get_order_info():
             type:
               object
             example:
-              {"order::{"productType": ["Accessories", "Android", "Noise"], "productName": "iPad pro 12.9", "withAccessories": 1,
-"productDescription": "{'color': 'green', 'outlook': '\u5168\u65b0', 'memory': '8G', 'storage': '64G'}", "platform":
+              {"order":{"productType": ["Accessories", "Android", "Noise"], "productName": "iPad pro 12.9", "withAccessories": 1,
+"productDescription": {"color": "green", "outlook": "\u5168\u65b0", "memory": "8G", "storage": "64G"}, "platform":
 "xy", "note": "", "money": {"purchasePrice": 1289, "soldPrice": 2105, "postPrice": 11}, "purchaser": "\u738b\u4e94",
 "contact": "10086", "accessories": ["Charger"]}}
         500:
