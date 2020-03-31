@@ -65,7 +65,7 @@ def get_month_graph():
     """
     today = datetime.datetime.now()
     first = today.replace(day=1)
-    span = (today - first).days
+    span = (today - first).days + 1
 
     back_data = get_order_by_time(span, today)
     back_data["days"] = span

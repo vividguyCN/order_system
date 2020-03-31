@@ -226,7 +226,7 @@ def get_order_by_time(days, today):
     for i in range(days, 0, -1):
         start_day = today - datetime.timedelta(days=i)
         end_day = today - datetime.timedelta(days=i-1)
-        result = Order.query.filter(and_(Order.dateTime.__ge__(start_day), Order.dateTime.__le__(end_day))).all()
+        result = Order.query.filter_by(isActive=1).filter(and_(Order.dateTime.__ge__(start_day), Order.dateTime.__le__(end_day))).all()
         daily_profit = c_profit(result)
         num = len(result)
         sales.append(num)

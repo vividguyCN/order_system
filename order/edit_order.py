@@ -32,7 +32,7 @@ def get_order_info():
 "productDescription": {"color": "green", "outlook": "\u5168\u65b0", "memory": "8G", "storage": "64G"}, "platform":
 "xy", "note": "", "money": {"purchasePrice": 1289, "soldPrice": 2105, "postPrice": 11}, "purchaser": "\u738b\u4e94",
 "contact": "10086", "accessories": ["Charger"]}}
-        500:
+        404:
           description: 订单不存在
           schema:
             type: object
@@ -45,14 +45,14 @@ def get_order_info():
         "order": get_order(order_id)
     }
 
-    if back_data != 'failed':
+    if back_data['order'] != 'failed':
         return json.dumps(back_data)
     else:
         back_json = {
             "status": "failed",
             "reason": "订单不存在"
         }
-        return json.dumps(back_json), 500
+        return json.dumps(back_json), 404
 
 
 @app.route("/api/delOrder", methods=["DELETE"])
