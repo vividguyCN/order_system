@@ -1,24 +1,19 @@
 from flask import request
 import datetime
 import json
+from application import app
+from order.order_database import get_order_by_time
 
 
 
-
-@app.route("/api/getGraph", methods=["GET"])
-def get_graph():
+# 获取一周销售图表
+@app.route("/api/getWeekGraph", methods=["GET"])
+def get_week_graph():
     """
-    Call this api to get graph
+    Call this api to get weekly graph
     ---
     tags:
-     - GetGraph
-     parameters:
-     - name: span
-       in: body
-       type: integer
-       required: true
-       description: 周查询/月查询
-       example: week
+     - GetWeeklyGraph
     responses:
       200:
        description: 获取图表成功,返回sales和profit
@@ -35,8 +30,44 @@ def get_graph():
               type: array
               example: [100,200,-10,200,-200,60,70]
     """
-    data = request.get_json()
-    # 获取时间跨度
-    span = data.get("span")
-    now_time = datetime.datetime.now()
+    today = datetime.datetime.now()
+    back_data = get_order_by_time(7, today)
 
+    return json.dumps(back_data), 200
+
+
+# 获取这个月销售图表
+@app.route("/api/getMonthGraph", methods=["GET"])
+def get_month_graph():
+    """
+    Call this api to get monthly graph
+    ---
+    tags:
+     - GetMonthlyGraph
+    responses:
+      200:
+       description: 获取图表成功,返回days,sales和profit
+       schema:
+         $ref: "#/definitions/Graph"
+
+    definitions:
+        Graph:
+          properties:
+            days:
+              type: string
+              example: 28
+            sales:
+              type: array
+              example: [10,10,0,20,40,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            profit:
+              type: array
+              example: [100,200,-10,200,-200,60,70,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    """
+    today = datetime.datetime.now()
+    first = today.replace(day=1)
+    span = (today - first).days
+
+    back_data = get_order_by_time(span, today)
+    back_data["days"] = span
+
+    return json.dumps(back_data), 200
