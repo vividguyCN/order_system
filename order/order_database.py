@@ -65,6 +65,7 @@ def get_all_orders(order, money, buyer, page):
 
     num = order.query.count()
     total = order.query.filter_by(isActive=1).count()
+
     if num > 50:
         start = num - page * 50 + 1
         if start < 0:
