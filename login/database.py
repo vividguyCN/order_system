@@ -23,12 +23,17 @@ def add_object(user):
     login_db.session.commit()
     print("add %r " % user.__repr__)
 
+
 # username 和 psd 查找
 def query_object(u_name, u_psd, u_email, type):
     if type == 'login':
         # login success return uid
-        # print('login')
-        result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).first()
+        # 检查用户名 还是邮箱登录
+        if u_name != '':
+            result = User.query.filter(and_(User.username == u_name, User.password == u_psd)).first()
+        elif u_email != '':
+            result = User.query.filter(and_(User.email == u_email, User.password == u_psd)).first()
+
         if result != None and int.from_bytes(result.isActive, byteorder='big') == 1:
             # 查询有结果并且允许登录 返回uid
             return result

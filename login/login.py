@@ -4,6 +4,7 @@ from login.database import User, query_object, add_object
 from application import app
 import logging
 
+
 @app.route("/api/login", methods=["POST"])
 def login():
     '''
@@ -17,7 +18,7 @@ def login():
         in: body
         type: string
         required: true
-        description: username
+        description: username or email
         example: admin
       - name: password
         in: body
@@ -58,6 +59,9 @@ def login():
 
         # 数据库查询
         result = query_object(back_data['username'], back_data['password'], ' ', 'login')
+        if result == '':
+            result = query_object('', back_data['password'], back_data['username'], 'login')
+
         if result != '':
             # 对登录成功的用户，返回状态码和json
             # json使用字典
@@ -80,6 +84,7 @@ def login():
         "msg": "账户未注册或被封禁"
     }
     return json.dumps(json_data), 403
+
 
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -159,4 +164,27 @@ def register():
             add_object(user)
             app.logger.info('%s register successfully ', back_data['username'])
 
+    return json.dumps(back_json), 200
+
+
+@app.route("/api/logout", methods=["POST"])
+def logout():
+    """
+     This is the Logout API
+    Call this api to logout
+    ---
+    tags:
+      - Logout
+    responses:
+      200:
+        description: logout success clear session
+        schema:
+          status:
+            type: string
+            example: success
+    """
+    session.clear()
+    back_json = {
+        "status": "success"
+    }
     return json.dumps(back_json), 200
