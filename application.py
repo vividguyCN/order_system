@@ -4,7 +4,7 @@ from datetime import timedelta
 import os
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 Swagger(app)
 
 app.config['SECRET_KEY'] = os.urandom(24)  # 使用一组随机数对session进行加密

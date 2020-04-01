@@ -115,6 +115,7 @@ def edit_user_info():
                 app.logger.info('%s change password', session['username'])
             else:
                 # 考虑优先级问题
+                app.logger.info('%s change password failed', session['username'])
                 back_json['reason'] = '原密码输入错误'
 
     return json.dumps(back_json), 200
