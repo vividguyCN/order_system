@@ -179,9 +179,10 @@ def logout():
       200:
         description: logout success clear session
         schema:
-          status:
-            type: string
-            example: success
+             properties:
+                status:
+                  type: string
+                  example: success
     """
     session.clear()
     back_json = {
