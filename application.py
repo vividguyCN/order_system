@@ -14,3 +14,8 @@ app.config['SQLALCHEMY_ECHO'] = False
 # 设置每次请求结束后会自动提交数据库的改动
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
+@app.route('/')
+def index():
+    return app.send_static_file("index.html")
