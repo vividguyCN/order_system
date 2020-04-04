@@ -8,5 +8,5 @@ from graph.graph import *
 from application import app
 
 if __name__ == '__main__':
-    webbrowser.open("http://0.0.0.0:3000")
+    # webbrowser.open("http://0.0.0.0:3000")
     app.run(host="0.0.0.0", port=3000, debug=True)
