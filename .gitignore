@@ -1,2 +1,10 @@
 .DS_Store
+<<<<<<< HEAD
 /.idea
+=======
+/.idea
+/__pycache__
+order/__pycache__
+login/__pycache__
+*/__pycache__
+>>>>>>> dev
