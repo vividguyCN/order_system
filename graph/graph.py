@@ -1,9 +1,9 @@
-from flask import request
+import datetime
 import datetime
 import json
+
 from application import app
 from order.order_database import get_order_by_time
-
 
 
 # 获取一周销售图表
@@ -53,7 +53,7 @@ def get_month_graph():
     definitions:
         MonthGraph:
           properties:
-            days:
+            day:
               type: string
               example: 28
             sales:
@@ -68,6 +68,6 @@ def get_month_graph():
     span = (today - first).days + 1
 
     back_data = get_order_by_time(span, today)
-    back_data["days"] = span
+    back_data["day"] = span
 
     return json.dumps(back_data), 200
