@@ -3,7 +3,6 @@ import json
 import datetime
 from order.order_database import Order, Money, Buyer, add_object
 from application import app
-from test.datacreate import create_data
 
 @app.route("/api/addOrder", methods=["POST"])
 def add_order():
@@ -112,10 +111,6 @@ def add_order():
     '''
     if request.method == "POST":
         get_data = request.get_json()
-
-        # 生成随机数据
-        # get_data = eval(create_data())
-
         # 获取order信息
         order_info = get_data.get('order')
         back_data = {
