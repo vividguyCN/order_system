@@ -1,7 +1,7 @@
 import os
 
 # 配置数据库
-DEBUG = True
+DEBUG = False
 SECREET_KEY = os.urandom(24)
 HOSTNAME = 'localhost'
 PORT = '3306'
