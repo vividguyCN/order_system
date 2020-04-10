@@ -38,4 +38,4 @@ class Creator(db.Model):
     contact = db.Column(db.String(255),unique=True)
 
     def __repr__(self):
-        return '<Creator name:%r contact:%r>' % (self.purchaser, self.contact)
+        return '<Creator name:%r contact:%r>' % (self.creator, self.contact)

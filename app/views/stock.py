@@ -107,6 +107,7 @@ def add_stock():
         'userId': get_data.get('userId'),
         'productType': stock_info.get('productType'),
         'productName': stock_info.get('productName'),
+        'productDescription': stock_info.get('productDescription'),
         'platform': stock_info.get('platform'),
         'price': stock_info.get('money')['price'],
         'num': stock_info.get('money')['num'],

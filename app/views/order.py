@@ -187,6 +187,11 @@ def add_stock_order():
        type: string
        description: 备注
        example: vip
+     - name: platform
+       in: body
+       type: string
+       description: 出售方式
+       example: vx
     responses:
       200:
        description: 订单创建失败
@@ -209,7 +214,8 @@ def add_stock_order():
         "purchaser": data.get('purchaser'),
         "contact": data.get('contact'),
         "note": data.get("note"),
-        "dataTime": datetime.datetime.now()
+        "dataTime": datetime.datetime.now(),
+        "platform": data.get('platform')
     }
     result = stock_2_order(stock_data)
     back_json = {

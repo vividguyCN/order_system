@@ -10,8 +10,6 @@ class Order(db.Model):
     productType = db.Column(db.String(255),unique=True)
     productName = db.Column(db.String(255),unique=True)
     productDescription = db.Column(db.String(255),unique=True)
-    withAccessories = db.Column(db.Integer, unique=True)
-    accessories = db.Column(db.String(255),unique=True)
     platform = db.Column(db.String(255),unique=True)
     note = db.Column(db.String(255),unique=True)
     isActive = db.Column(db.Integer,unique=True)

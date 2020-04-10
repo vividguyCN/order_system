@@ -31,10 +31,10 @@ def get_stock(stock_id):
             "platform": stock.platform,
             "note": stock.note,
             "money": {
-                "price": money.purchasePrice,
-                "num": money.soldPrice,
+                "price": money.price,
+                "num": money.num,
             },
-            "creator": creator.purchaser,
+            "creator": creator.creator,
             "contact": creator.contact
         }
         return back_data
@@ -150,9 +150,9 @@ def get_stock_page(stock, money, type_dict):
         money_data = money.query.get(index)
         stock_data = stock.query.get(index)
         if int.from_bytes(stock_data.isSold, byteorder='big') == 0:
-            total_money = total_money + money.total
-            total_num = total_num + money.num
-            product_type = stock.productType.split('/')
+            total_money = total_money + money_data.total
+            total_num = total_num + money_data.num
+            product_type = stock_data.productType.split('/')
             # 对不同的type进行统计
             if product_type[0] in list(type_dict.keys()):
                 type_dict[product_type[0]]['num'] = type_dict[product_type[0]]['num'] + money_data.num

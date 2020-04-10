@@ -46,7 +46,6 @@ def get_all_orders(order, money, buyer, page):
             "dateTime": str(order_data.dateTime),
             "productName": order_data.productName,
             "productType": order_data.productType.split('/'),
-            "productDescription": eval(order_data.productDescription),
             "purchasePrice": money_data.purchasePrice,
             "soldPrice": money_data.soldPrice,
             "postPrice": money_data.postPrice,
@@ -55,8 +54,12 @@ def get_all_orders(order, money, buyer, page):
             "contact": buyer_data.contact,
             "platform": order_data.platform,
         }
-        if order_data.accessories != None:
-            data['accessories'] = order_data.accessories.split('/')
+        # TODO 解决其他订单中文问题
+        try:
+            data["productDescription"] = eval(order.productDescription)
+        except:
+            data["productDescription"] = order.productDescription
+
         if order_data.note != '':
             data['note'] = order_data.note
 
@@ -82,8 +85,6 @@ def get_order(order_id):
         back_data = {
             "productType": order.productType.split('/'),
             "productName": order.productName,
-            "withAccessories": int.from_bytes(order.withAccessories, byteorder='big'),
-            "productDescription": eval(order.productDescription),
             "platform": order.platform,
             "note": order.note,
             "money": {
@@ -94,8 +95,12 @@ def get_order(order_id):
             "purchaser": purchaser.purchaser,
             "contact": purchaser.contact
         }
-        if back_data["withAccessories"]:
-            back_data["accessories"] = order.accessories.split('/')
+        # TODO 解决其他订单中文问题
+        try:
+            back_data["productDescription"] = eval(order.productDescription)
+        except:
+            back_data["productDescription"] = order.productDescription
+
         return back_data
     else:
         return 'failed'
@@ -184,7 +189,7 @@ def stock_2_order(stock_data):
         stock_money.num = 0
         stock.isSold = 1
     else:
-        stock_money.num = stock_money - sold_num
+        stock_money.num = stock_money.num - sold_num
 
     order.productType = stock.productType
     order.dateTime = stock_data['dataTime']

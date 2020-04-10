@@ -160,6 +160,7 @@ def register():
             user.username = back_data['username']
             user.password = back_data['password']
             user.email = back_data['email']
+            user.permissions = 2
             user.isActive = 1
             add_object(user)
             # user_api.logger.info('%s register successfully ', back_data['username'])

@@ -44,11 +44,11 @@ def money_homepage():
     order = Order()
     order_money = OrderMoney()
 
-    stock_total_money = get_total_money(stock, stock_money, 'stock')['total']
+    stock_total_money = get_total_money(stock, stock_money, 'stock')['total_money']
     order_get_money = get_total_money(order, order_money, 'order')
-    order_sold = order_get_money['total']
-    order_profit = order_get_money['profit']
-    order_post = order_get_money['post']
+    order_sold = order_get_money['total_money']
+    order_profit = order_get_money['total_profit']
+    order_post = order_get_money['total_post']
     order_purchase = order_sold - order_profit - order_post
     back_data = {
         "stockMoney": stock_total_money,
