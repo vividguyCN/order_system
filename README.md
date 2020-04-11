@@ -23,7 +23,7 @@ CREATE TABLE `login` (
         `password` tinytext NOT NULL,
         `email` tinytext,
 	    `isActive` bit NOT NULL DEFAULT 1,
-        `permission` int(11) NOT NULL DEFAULT 2,
+        `permissions` int(11) NOT NULL DEFAULT 2,
          PRIMARY KEY (`uid`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

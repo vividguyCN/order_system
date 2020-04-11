@@ -9,7 +9,6 @@ def create_app(config_name):
     app = Flask(__name__)
     # 加载配置
     app.config.from_object(config.get(config_name) or 'default')
-    print(app.config)
     # 加载swagger
     Swagger(app)
     # 执行额外的初始化

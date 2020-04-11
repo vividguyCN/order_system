@@ -1,3 +1,6 @@
+from app.models.order import Order
+from app.models.stock import Stock
+
 
 def get_total_money(query_type, money_type, flag):
     overview = {
@@ -22,9 +25,48 @@ def get_total_money(query_type, money_type, flag):
     return overview
 
 
-def money_detail(order, order_money, stock, stock_money):
-    order_result = order.query.filter_by('dateTime')
+def get_time(elem):
+    return elem.dateTime
 
 
+def get_money_detail(order_money, stock_money, page):
+    page_size = 50
+    # 对result中数据按time倒序
+    order_result = Order.query.filter_by(isActive=1).all()
+    stock_result = Stock.query.filter_by(isSold=0).all()
+    result = order_result + stock_result
+    # result中数据为按照time倒序的所有有效的订单和库存数据
+    result.sort(reverse=True, key=get_time)
 
+    num = len(result)
+    back_data = {
+        "moneyDetail": [],
+        "num": num
+    }
+    # 计算显示片段
+    if num > page_size:
+        # 有多页
+        start = (page - 1) * page_size
+        end = start + 49
+        if end > num:
+            end = num
+    else:
+        start = 0
+        end = num
+    detail = dict()
+    for i in range(start, end):
+        if type(result[i]) == Order:
+            money = order_money.query.get(result[i].id).soldPrice
+            detail['type'] = "out"
+        elif type(result[i]) == Stock:
+            money = stock_money.query.get(result[i].id).total
+            detail['type'] = "in"
+        detail = {
+            "dateTime": str(result[i].dateTime),
+            "productType": result[i].productType,
+            "productName": result[i].productName,
+            "money": money
+        }
+        back_data['moneyDetail'].append(detail)
 
+    return back_data

@@ -1,6 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, request
 import json
-from app.database.money import get_total_money
+from app.database.money import get_total_money, get_money_detail
 from app.models.stock import StockMoney, Stock
 from app.models.order import OrderMoney, Order
 
@@ -58,3 +58,39 @@ def money_homepage():
         "orderPost": order_post
     }
     return json.dumps(back_data), 200
+
+
+@money_api.route("/moneyDetail",methods=["POST"])
+def money_detail():
+    """
+    使用这个api来获取资金流水明细
+    ---
+    tags:
+     - MoneyDetail
+    responses:
+      200:
+       description: 返回资金流水列表
+       schema:
+         $ref: "#/definitions/MoneyDetail"
+
+    definitions:
+        MoneyDetail:
+          properties:
+            moneyDetail:
+              type: array
+              example: [{"type":"in","dateTime":"2020-04-11 01:21:39","productType":"Pad","productName":"iPad",
+              "money":"4000"}]
+            num:
+              type: integer
+              example: 1
+
+    """
+    data = request.get_json()
+    page = int(data.get('page'))
+
+    order_money = OrderMoney()
+    stock_money = StockMoney()
+
+    back_json = get_money_detail(order_money,stock_money, page)
+
+    return json.dumps(back_json), 200

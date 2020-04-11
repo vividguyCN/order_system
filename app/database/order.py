@@ -15,12 +15,23 @@ def add_object(order, money, buyer):
     print("add %r " % buyer.__repr__)
 
 
+def get_order_num(order):
+    num = order.query.count()
+    total = order.query.filter_by(isActive=1).count()
+    order_num = {
+        "num": num,
+        "total": total
+    }
+    return order_num
+
+
 def get_all_orders(order, money, buyer, page):
     # 获得订单列表
     order_list = []
 
-    num = order.query.count()
-    total = order.query.filter_by(isActive=1).count()
+    order_num = get_order_num(order)
+    num = order_num['num']
+    total = order_num['total']
 
     if num > 50:
         start = num - page * 50 + 1
@@ -54,11 +65,11 @@ def get_all_orders(order, money, buyer, page):
             "contact": buyer_data.contact,
             "platform": order_data.platform,
         }
-        # TODO 解决其他订单中文问题
         try:
-            data["productDescription"] = eval(order.productDescription)
+            data["productDescription"] = eval(order_data.productDescription)
         except:
-            data["productDescription"] = order.productDescription
+            data["productDescription"] = order_data.productDescription
+
 
         if order_data.note != '':
             data['note'] = order_data.note
@@ -68,8 +79,8 @@ def get_all_orders(order, money, buyer, page):
         order_list.append(data)
 
     back_data = {
-        'orderList': order_list,
-        'total': total
+        'order': order_list,
+        'orderNum': total
     }
     return back_data
 
@@ -123,7 +134,6 @@ def edit_order_info(data):
         "userId": data.get('userId'),
         "productType": order_info.get('productType'),
         "productName": order_info.get('productName'),
-        "withAccessories": order_info.get('withAccessories'),
         "productDescription": order_info.get('productDescription'),
         "platform": order_info.get('platform'),
         "purchasePrice": order_info.get('money')['purchasePrice'],
@@ -145,17 +155,6 @@ def edit_order_info(data):
 
     order.productType = product_type
     order.productName = back_data['productName']
-
-    # 如果包含配件 加入配件字段
-    order.withAccessories = back_data['withAccessories']
-    if back_data['withAccessories']:
-        accessories = ''
-        for i in range(len(order_info.get('accessories'))):
-            accessories = accessories + str(order_info.get('accessories')[i])
-            if i != len(order_info.get('accessories')) - 1:
-                accessories = accessories + '/'
-        order.accessories = accessories
-
     order.productDescription = str(back_data['productDescription'])
 
     order.platform = back_data['platform']
@@ -185,11 +184,12 @@ def stock_2_order(stock_data):
     sold_num = stock_data['num']
     if sold_num > stock_money.num:
         return 0
-    if stock_money.num - sold_num <= 0:
+    if stock_money.num - sold_num == 0:
         stock_money.num = 0
         stock.isSold = 1
     else:
         stock_money.num = stock_money.num - sold_num
+        stock_money.total = stock_money.total - sold_num * stock_money.price
 
     order.productType = stock.productType
     order.dateTime = stock_data['dataTime']

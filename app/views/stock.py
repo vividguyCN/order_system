@@ -335,15 +335,15 @@ def get_stock_list():
       200:
        description: 获取库存成功，返回一个列表，包含page中的库存
        schema:
-         $ref: "#/definitions/OrderList"
+         $ref: "#/definitions/StockList"
 
     definitions:
-        OrderList:
+        StockList:
           properties:
-            orderList:
+            stock:
               type: array
               example: [{"stockId": 1,"dateTime": "2020-03-27 02:38:47","productName": "iPhone","productType": ["Phone","Apple"],"productDescription": {"color":"sliver","outlook":"全新"}, "price": 1000,"num": 20,"total": 20000,"platform":"vx","creator": "张三","contact": 182****9597}]
-            total:
+            stockNum:
               type: integer
               example: 1
     """
@@ -377,58 +377,36 @@ def stock_homepage():
           properties:
             overview:
               type: object
-              example: {"num":0,"total":0}
-            Phone:
-              type: object
-              example: {"num":0,"total":0}
-            Pad:
-              type: object
-              example: {"num":0,"total":0}
-            Computer:
-              type: object
-              example: {"num":0,"total":0}
-            EarPhone:
-              type: object
-              example: {"num":0,"total":0}
-            Other:
-              type: object
-              example: {"num":0,"total":0}
-            Accessories:
-              type: object
-              example: {"num":0,"total":0}
+              example: {"num":85,"total":56700}
+            average:
+              type: integer
+              description: 放大倍数
+              example: 650
+            types:
+              type: array
+              description: 库存类型
+              example: ["Phone","Pad","Computer","Accessories","EarPhone","Other"]
+            num:
+              type: array
+              description: 类型对应数量
+              example: [10,10,1,50,10,4]
+            total:
+              type: array
+              description: 类型对应库存金额
+              example: [10000,40000,4000,2000,200,500]
     """
     stock = Stock()
     money = StockMoney()
     type_dict = {
-        "overview":{
+        "overview": {
             "num": 0,
             "total": 0
         },
-        "Phone": {
-            "num": 0,
-            "total": 0
-        },
-        "Pad": {
-            "num": 0,
-            "total": 0
-        },
-        "Computer": {
-            "num": 0,
-            "total": 0
-        },
-        "Accessories": {
-            "num": 0,
-            "total": 0
-        },
-        "EarPhone": {
-            "num": 0,
-            "total": 0
-        },
-        "Other": {
-            "num": 0,
-            "total": 0
+        "average": 0,
+        "types": ["Phone", "Pad", "Computer", "Accessories", "EarPhone", "Other"],
+        "num": [0, 0, 0, 0, 0, 0],
+        "total": [0, 0, 0, 0, 0, 0]
         }
-    }
     type_dict = get_stock_page(stock, money, type_dict)
     return json.dumps(type_dict)
 

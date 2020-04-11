@@ -145,7 +145,6 @@ def register():
         # 数据库查询
         # 检查是否存在相同username,email
         result = query_object(back_data['username'], '', back_data['email'], 'register')
-        print(result)
         if result == 1:
             back_json['reason'] = '用户名被占用'
             back_json['verified'] = False

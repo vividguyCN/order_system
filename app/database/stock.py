@@ -90,13 +90,22 @@ def edit_stock_info(data):
     return 1
 
 
+def get_stock_num(stock):
+    stock_num = {
+        "num": stock.query.count(),
+        "total": stock.query.filter_by(isSold=0).count()
+    }
+    return stock_num
+
+
 # 获得库存列表
 def get_all_stocks(stock, money, creator, page):
     # 获得订单列表
     stock_list = []
 
-    num = stock.query.count()
-    total = stock.query.filter_by(isSold=0).count()
+    stock_num = get_stock_num(stock)
+    num = stock_num['num']
+    total = stock_num['total']
 
     if num > 50:
         start = num - page * 50 + 1
@@ -135,8 +144,8 @@ def get_all_stocks(stock, money, creator, page):
         stock_list.append(data)
 
     back_data = {
-        'stockList': stock_list,
-        'total': total
+        'stock': stock_list,
+        'stockNum': total
     }
     return back_data
 
@@ -154,11 +163,13 @@ def get_stock_page(stock, money, type_dict):
             total_num = total_num + money_data.num
             product_type = stock_data.productType.split('/')
             # 对不同的type进行统计
-            if product_type[0] in list(type_dict.keys()):
-                type_dict[product_type[0]]['num'] = type_dict[product_type[0]]['num'] + money_data.num
-                type_dict[product_type[0]]['total'] = type_dict[product_type[0]]['total'] + money_data.total
+            if product_type[0] in type_dict['types']:
+                p = type_dict["types"].index(product_type[0])
+                type_dict['num'][p] = type_dict['num'][p] + money_data.num
+                type_dict['total'][p] = type_dict['total'][p] + money_data.total
 
     type_dict['overview']['num'] = total_num
     type_dict['overview']['total'] = total_money
+    type_dict['average'] = int(total_money / total_num)
     return type_dict
 

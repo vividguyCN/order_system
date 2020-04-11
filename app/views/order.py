@@ -35,7 +35,8 @@ def add_other_order():
                 example: 杰伦演唱会
             productDescription:
                 type: string
-                description: 1999价位
+                description: 产品描述
+                example: 1999价位
             platform:
                 type: string
                 description: 出售平台
@@ -92,7 +93,9 @@ def add_other_order():
             'userId': get_data.get('userId'),
             'productType': order_info.get('productType'),
             'productName': order_info.get('productName'),
-            'productDescription': order_info.get('productDescription'),
+            'productDescription': {
+                "description": str(order_info.get('productDescription'))
+                },
             'platform': order_info.get('platform'),
             'purchasePrice': order_info.get('money')['purchasePrice'],
             'soldPrice': order_info.get('money')['soldPrice'],
@@ -109,7 +112,7 @@ def add_other_order():
         order.dateTime = datetime.datetime.now()
         order.productType = back_data['productType']
         order.productName = back_data['productName']
-        order.productDescription = back_data['productDescription']
+        order.productDescription = str(back_data['productDescription'])
         order.platform = back_data['platform']
         order.note = back_data['note']
         order.isActive = 1
@@ -222,7 +225,7 @@ def add_stock_order():
         "status": "failed"
     }
     if result == 0:
-        back_json['reason'] = 'failed'
+        back_json['reason'] = '库存不足'
     elif result == 1:
         back_json['status'] = 'success'
     return json.dumps(back_json), 200
@@ -456,10 +459,10 @@ def get_order_list():
     definitions:
         OrderList:
           properties:
-            orderList:
+            order:
               type: array
               example: [{"orderId": 1,"dateTime": "2020-03-27 02:38:47","productName": "iPhone","productType": ["Phone","Apple"],"productDescription": {"color":"sliver","outlook":"全新"}, "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"platform":"vx","purchaser": "张三","contact": 182****9597}]
-            total:
+            orderNum:
               type: integer
               example: 1
     """
@@ -471,7 +474,7 @@ def get_order_list():
         money = OrderMoney()
         buyer = Buyer()
 
-        back_json = get_all_orders(order,money,buyer,page)
+        back_json = get_all_orders(order, money, buyer, page)
 
     return json.dumps(back_json), 200
 
