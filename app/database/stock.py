@@ -41,6 +41,7 @@ def get_stock(stock_id):
     else:
         return 'failed'
 
+
 # 修改库存信息
 def edit_stock_info(data):
     stock_id = data.get('stockId')
@@ -144,7 +145,7 @@ def get_all_stocks(stock, money, creator, page):
         stock_list.append(data)
 
     back_data = {
-        'stock': stock_list,
+        'stockList': stock_list,
         'stockNum': total
     }
     return back_data
@@ -170,6 +171,5 @@ def get_stock_page(stock, money, type_dict):
 
     type_dict['overview']['num'] = total_num
     type_dict['overview']['total'] = total_money
-    type_dict['average'] = int(total_money / total_num)
     return type_dict
 

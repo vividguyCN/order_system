@@ -153,48 +153,30 @@ def add_stock_order():
        required: true
        description: 库存号
        example: 1
-     - name: money
+     - name: stock
+       in: body
        type: object
-       in: body
        required: true
-       description: 金额
+       description: 订单描述
        properties:
-           soldPrice:
-             type: integer
-             description: 售价
-             example: 100
-           postPrice:
-             type: integer
-             description: 邮费
-             example: 10
-     - name: num
-       in: body
-       type: integer
-       required: true
-       description: 数量
-       example: 1
-     - name: purchaser
-       in: body
-       type: string
-       required: true
-       description: 购买人
-       example: 张三
-     - name: contact
-       in: body
-       type: string
-       required: true
-       description: 联系方式
-       example: 182****1597
-     - name: note
-       in: body
-       type: string
-       description: 备注
-       example: vip
-     - name: platform
-       in: body
-       type: string
-       description: 出售方式
-       example: vx
+         money:
+           type: object
+           example: {"soldPrice":1000,"postPrice":10}
+         num:
+           type: integer
+           example: 1
+         purchaser:
+           type: string
+           example: 张三
+         contact:
+           type: string
+           example: 123456789
+         note:
+           type: string
+           example: 无
+         platform:
+           type: string
+           example: vx
     responses:
       200:
        description: 订单创建失败
@@ -208,17 +190,18 @@ def add_stock_order():
               example: 库存不足
     """
     data = request.get_json()
+    stock_data = data.get('stock')
     stock_data = {
         "stockId": data.get("stockId"),
         "userId": data.get('userId'),
-        "soldPrice": data.get("money")['soldPrice'],
-        "postPrice": data.get("money")['postPrice'],
-        "num": data.get('num'),
-        "purchaser": data.get('purchaser'),
-        "contact": data.get('contact'),
-        "note": data.get("note"),
+        "soldPrice": stock_data.get("money")['soldPrice'],
+        "postPrice": stock_data.get("money")['postPrice'],
+        "num": stock_data.get('num'),
+        "purchaser": stock_data.get('purchaser'),
+        "contact": stock_data.get('contact'),
+        "note": stock_data.get("note"),
         "dataTime": datetime.datetime.now(),
-        "platform": data.get('platform')
+        "platform": stock_data.get('platform')
     }
     result = stock_2_order(stock_data)
     back_json = {
@@ -436,7 +419,7 @@ def edit_order():
     return json.dumps(back_json), 200
 
 
-@order_api.route("/getOrder", methods=["POST"])
+@order_api.route("/getOrders", methods=["POST"])
 def get_order_list():
     """
     使用这个api来获得订单列表
@@ -459,7 +442,7 @@ def get_order_list():
     definitions:
         OrderList:
           properties:
-            order:
+            orderList:
               type: array
               example: [{"orderId": 1,"dateTime": "2020-03-27 02:38:47","productName": "iPhone","productType": ["Phone","Apple"],"productDescription": {"color":"sliver","outlook":"全新"}, "purchasePrice": 1000,"soldPrice": 2000,"postPrice": 20,"profit": 980,"platform":"vx","purchaser": "张三","contact": 182****9597}]
             orderNum:

@@ -34,8 +34,6 @@ CREATE TABLE `order_info`(
 		`productType` TINYTEXT NOT NULL,
 		`productName` TINYTEXT NOT NULL,
 		`productDescription` TINYTEXT,
-		`withAccessories` bit NOT NULL DEFAULT 0,
-        `accessories` TINYTEXT,
 		`platform` TINYTEXT NOT NULL,
 		`note` TINYTEXT,
 		`isActive` bit NOT NULL DEFAULT 1,

@@ -317,7 +317,7 @@ def edit_stock():
     return json.dumps(back_json), 200
 
 
-@stock_api.route("/getStock", methods=["POST"])
+@stock_api.route("/getStocks", methods=["POST"])
 def get_stock_list():
     """
     使用这个api来获得库存列表
@@ -340,9 +340,11 @@ def get_stock_list():
     definitions:
         StockList:
           properties:
-            stock:
+            stockList:
               type: array
-              example: [{"stockId": 1,"dateTime": "2020-03-27 02:38:47","productName": "iPhone","productType": ["Phone","Apple"],"productDescription": {"color":"sliver","outlook":"全新"}, "price": 1000,"num": 20,"total": 20000,"platform":"vx","creator": "张三","contact": 182****9597}]
+              example: [{"stockId": 1,"dateTime": "2020-03-27 02:38:47","productName": "iPhone",
+"productType": ["Phone","Apple"],"productDescription": {"color":"sliver","outlook":"全新"},
+"price": 1000,"num": 20,"total": 20000,"platform":"vx","creator": "张三","contact": 182****9597}]
             stockNum:
               type: integer
               example: 1
@@ -378,10 +380,6 @@ def stock_homepage():
             overview:
               type: object
               example: {"num":85,"total":56700}
-            average:
-              type: integer
-              description: 放大倍数
-              example: 650
             types:
               type: array
               description: 库存类型
@@ -402,7 +400,6 @@ def stock_homepage():
             "num": 0,
             "total": 0
         },
-        "average": 0,
         "types": ["Phone", "Pad", "Computer", "Accessories", "EarPhone", "Other"],
         "num": [0, 0, 0, 0, 0, 0],
         "total": [0, 0, 0, 0, 0, 0]

@@ -79,7 +79,7 @@ def get_all_orders(order, money, buyer, page):
         order_list.append(data)
 
     back_data = {
-        'order': order_list,
+        'orderList': order_list,
         'orderNum': total
     }
     return back_data
