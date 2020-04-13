@@ -1,6 +1,6 @@
 import datetime
 from flask import Blueprint
-from app.database.graph import get_order_by_time
+from order_system.app.database.graph import get_order_by_time
 import json
 
 graph_api = Blueprint('graph', __name__)

@@ -1,7 +1,7 @@
 from flask import request, session, Blueprint
 import json
-from app.models.users import User
-from app.database.login import query_object, add_object, edit_user
+from order_system.app.models.users import User
+from order_system.app.database.login import query_object, add_object, edit_user
 
 user_api = Blueprint('user', __name__)
 

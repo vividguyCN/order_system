@@ -1,4 +1,4 @@
-from app.common import db
+from order_system.app.common import db
 
 
 class Order(db.Model):

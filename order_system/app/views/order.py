@@ -1,6 +1,6 @@
 from flask import request, Blueprint
 import json
-from app.database.order import *
+from order_system.app.database.order import *
 
 order_api = Blueprint('order', __name__)
 

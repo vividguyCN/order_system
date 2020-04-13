@@ -1,12 +1,14 @@
 from flask import Flask
 from flasgger import Swagger
-from app.config import config
-from app.views import config_blueprint
+from order_system.app.config import config
+from order_system.app.views import config_blueprint
 
 
 def create_app(config_name):
     # 创建app实例对象
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='')
+    print(app.static_url_path)
+    print(app.static_folder)
     # 加载配置
     app.config.from_object(config.get(config_name) or 'default')
     # 加载swagger

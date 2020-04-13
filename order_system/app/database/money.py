@@ -1,5 +1,5 @@
-from app.models.order import Order
-from app.models.stock import Stock
+from order_system.app.models.order import Order
+from order_system.app.models.stock import Stock
 
 
 def get_total_money(query_type, money_type, flag):

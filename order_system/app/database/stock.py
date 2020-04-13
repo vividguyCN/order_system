@@ -1,6 +1,6 @@
 import datetime
-from app.common import db
-from app.models.stock import StockMoney, Stock, Creator
+from order_system.app.common import db
+from order_system.app.models.stock import StockMoney, Stock, Creator
 
 
 # 增加库存
