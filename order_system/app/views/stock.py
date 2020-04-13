@@ -400,7 +400,7 @@ def stock_homepage():
             "num": 0,
             "total": 0
         },
-        "types": ["Phone", "Pad", "Computer", "Accessories", "EarPhone", "Other"],
+        "types": ["Phone", "Pad", "Computer", "Accessories", "EarPhones", "Other"],
         "num": [0, 0, 0, 0, 0, 0],
         "total": [0, 0, 0, 0, 0, 0]
         }

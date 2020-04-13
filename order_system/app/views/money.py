@@ -78,7 +78,7 @@ def money_detail():
           properties:
             moneyDetail:
               type: array
-              example: [{"type":"in","dateTime":"2020-04-11 01:21:39","productType":"Pad","productName":"iPad",
+              example: [{"type":"in","dateTime":"2020-04-11 01:21:39","productType":["Pad"],"productName":"iPad",
               "money":"4000"}]
             num:
               type: integer
@@ -91,6 +91,6 @@ def money_detail():
     order_money = OrderMoney()
     stock_money = StockMoney()
 
-    back_json = get_money_detail(order_money,stock_money, page)
+    back_json = get_money_detail(order_money, stock_money, page)
 
     return json.dumps(back_json), 200

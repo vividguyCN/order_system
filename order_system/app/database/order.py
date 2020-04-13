@@ -200,8 +200,8 @@ def stock_2_order(stock_data):
     order.note = stock_data['note']
     order.isActive = 1
 
-    order_money.soldPrice = stock_data['soldPrice']
-    order_money.purchasePrice = stock_money.price
+    order_money.soldPrice = stock_data['soldPrice'] * sold_num
+    order_money.purchasePrice = stock_money.price * sold_num
     order_money.postPrice = stock_data['postPrice']
     order_money.profit = order_money.soldPrice - order_money.postPrice - order_money.purchasePrice
 

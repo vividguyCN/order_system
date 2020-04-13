@@ -74,7 +74,7 @@ def login():
             session['uid'] = result.uid
             session['password'] = result.password
             session['email'] = result.email
-            session['permissions'] = result.permissions
+            session['role'] = result.role
 
             # app.logger.info('%s logged in successfully', back_data['username'])
 
@@ -113,6 +113,12 @@ def register():
         required: true
         description: email
         example: example@email.com
+      - name: role
+        in: body
+        type: integer
+        required: true
+        description: 1-admin, 2-user, 3-guest
+        example: 2
     responses:
       200:
         description: success return verified=true,failed return verified=false and reason
@@ -129,13 +135,15 @@ def register():
               type: string
               example: 相同的用户名
     """
-    if request.method == "POST":
+    # 判断用户是否有注册权限
+    if session['role'] == 1:
         # 获取数据
         user_info = request.get_json()
         back_data = {
             'username': user_info.get('username'),
             'password': user_info.get('password'),
             'email': user_info.get('email'),
+            'role': user_info.get('role')
         }
         back_json = {
             'verified': True,
@@ -159,10 +167,15 @@ def register():
             user.username = back_data['username']
             user.password = back_data['password']
             user.email = back_data['email']
-            user.permissions = 2
+            user.role = back_data['role']
             user.isActive = 1
             add_object(user)
             # user_api.logger.info('%s register successfully ', back_data['username'])
+    else:
+        back_json = {
+            'status': False,
+            'reason': '你无权这么做'
+        }
 
     return json.dumps(back_json), 200
 
@@ -257,7 +270,7 @@ def edit_user_info():
         # 通过session 获取uid访问数据库
         new_info = {
             'new_name': data.get('username'),
-            'new_email': data.get('email')
+            'new_email': data.get('email'),
         }
         uid = int(session['uid'])
 
@@ -336,6 +349,6 @@ def get_user_info():
     back_json = {
         "username": session['username'],
         "email": session['email'],
-        "permissions": session['permissions']
+        "role": session['role']
     }
     return json.dumps(back_json)

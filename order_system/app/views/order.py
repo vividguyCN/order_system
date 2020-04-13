@@ -93,9 +93,7 @@ def add_other_order():
             'userId': get_data.get('userId'),
             'productType': order_info.get('productType'),
             'productName': order_info.get('productName'),
-            'productDescription': {
-                "description": str(order_info.get('productDescription'))
-                },
+            'productDescription': str(order_info.get('productDescription')),
             'platform': order_info.get('platform'),
             'purchasePrice': order_info.get('money')['purchasePrice'],
             'soldPrice': order_info.get('money')['soldPrice'],
@@ -203,6 +201,7 @@ def add_stock_order():
         "dataTime": datetime.datetime.now(),
         "platform": stock_data.get('platform')
     }
+
     result = stock_2_order(stock_data)
     back_json = {
         "status": "failed"

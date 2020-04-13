@@ -53,20 +53,20 @@ def get_money_detail(order_money, stock_money, page):
     else:
         start = 0
         end = num
-    detail = dict()
+
     for i in range(start, end):
-        if type(result[i]) == Order:
-            money = order_money.query.get(result[i].id).soldPrice
-            detail['type'] = "out"
-        elif type(result[i]) == Stock:
-            money = stock_money.query.get(result[i].id).total
-            detail['type'] = "in"
         detail = {
             "dateTime": str(result[i].dateTime),
-            "productType": result[i].productType,
+            "productType": result[i].productType.split('/'),
             "productName": result[i].productName,
-            "money": money
         }
-        back_data['moneyDetail'].append(detail)
+        if type(result[i]) == Order:
+            money = order_money.query.get(result[i].id).soldPrice
+            detail['type'] = "in"
+        elif type(result[i]) == Stock:
+            money = stock_money.query.get(result[i].id).total
+            detail['type'] = "out"
+        detail['money'] = money
 
+        back_data['moneyDetail'].append(detail)
     return back_data
