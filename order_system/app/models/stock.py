@@ -1,4 +1,4 @@
-from order_system.app.common import db
+from app.common import db
 
 
 class Stock(db.Model):

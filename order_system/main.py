@@ -1,5 +1,5 @@
-from order_system.app import create_app
-from order_system.app.common import db
+from app import create_app
+from app.common import db
 import os
 
 

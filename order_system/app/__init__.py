@@ -1,7 +1,7 @@
 from flask import Flask
 from flasgger import Swagger
-from order_system.app.config import config
-from order_system.app.views import config_blueprint
+from app.config import config
+from app.views import config_blueprint
 
 
 def create_app(config_name):

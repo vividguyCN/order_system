@@ -1,4 +1,4 @@
-from order_system.app.models.order import Order, OrderMoney
+from app.models.order import Order, OrderMoney
 import datetime
 from sqlalchemy import and_
 
