@@ -1,12 +1,12 @@
 from .order import order_api
 from .user import user_api
 from .stock import stock_api
-from .main import main
+# from .main import main
 from .graph import graph_api
 from .money import money_api
 
 DEFAULT_BLUEPRINT = (
-    (main, ''),
+    # (main, ''),
     (order_api, '/api'),
     (user_api, '/api'),
     (graph_api, '/api'),

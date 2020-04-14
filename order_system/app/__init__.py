@@ -6,7 +6,7 @@ from app.views import config_blueprint
 
 def create_app(config_name):
     # 创建app实例对象
-    app = Flask(__name__, static_url_path='')
+    app = Flask(__name__,static_url_path='')
     print(app.static_url_path)
     print(app.static_folder)
     # 加载配置
@@ -16,7 +16,7 @@ def create_app(config_name):
     # 执行额外的初始化
     config.get(config_name).init_app(app)
     # 设置debug=True,让toolbar生效
-    # app.debug=True
+    app.debug = True
     # 加载扩展
     # config_extensions(app)
     # 配置蓝本

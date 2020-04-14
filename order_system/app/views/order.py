@@ -108,7 +108,14 @@ def add_other_order():
 
         order.userId = back_data['userId']
         order.dateTime = datetime.datetime.now()
-        order.productType = back_data['productType']
+        # 写入配件
+        product_type = ''
+        for i in range(len(back_data['productType'])):
+            product_type = product_type + back_data['productType'][i]
+            if i != len(back_data['productType']) - 1:
+                product_type = product_type + '/'
+        order.productType = product_type
+
         order.productName = back_data['productName']
         order.productDescription = str(back_data['productDescription'])
         order.platform = back_data['platform']
@@ -287,7 +294,6 @@ def del_order():
                   example: success
     """
     data = request.get_json()
-    print(data)
     order_id = data.get('orderId')
     delete_order(order_id)
     back_json = {

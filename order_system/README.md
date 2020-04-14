@@ -73,7 +73,7 @@ CREATE TABLE `stock_money`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		`price` int(11) UNSIGNED NOT NULL,
 		`num` int(11) UNSIGNED NOT NULL,
-		`total` int(11) UNSIGNED
+		`total` int(11) UNSIGNED,
 		PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
