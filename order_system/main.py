@@ -8,6 +8,7 @@ config_name = os.environ.get('FLASK_ENV') or 'default'
 app = create_app(config_name)
 db.init_app(app)
 
+
 @app.route('/')
 def index():
     return app.send_static_file("index.html")

@@ -39,7 +39,7 @@ class DevelopmentConfig(Config):
 # 测试环境配置
 class TestConfig(Config):
     HOSTNAME = 'dmysql'
-    PORT = '6666'
+    PORT = '3306'
     DATABASE = 'order_system'
     USERNAME = 'root'
     PASSWORD = '123456'
