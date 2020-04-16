@@ -3,6 +3,7 @@ import json
 from app.database.money import get_total_money, get_money_detail
 from app.models.stock import StockMoney, Stock
 from app.models.order import OrderMoney, Order
+from app.models.money import MoneyDetail
 
 money_api = Blueprint('money', __name__)
 
@@ -88,9 +89,8 @@ def money_detail():
     data = request.get_json()
     page = int(data.get('page'))
 
-    order_money = OrderMoney()
-    stock_money = StockMoney()
+    md = MoneyDetail()
 
-    back_json = get_money_detail(order_money, stock_money, page)
+    back_json = get_money_detail(md, page)
 
     return json.dumps(back_json), 200

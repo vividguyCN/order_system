@@ -2,17 +2,14 @@ import datetime
 from app.common import db
 from app.models.order import Order, OrderMoney, Buyer
 from app.models.stock import Stock, StockMoney
+from app.models.money import MoneyDetail
 
 
 # 新增订单
-def add_object(order, money, buyer):
-    db.session.add(order)
-    db.session.add(money)
-    db.session.add(buyer)
+def add_object(obj):
+    db.session.add(obj)
     db.session.commit()
-    print("add %r " % order.__repr__)
-    print("add %r " % money.__repr__)
-    print("add %r " % buyer.__repr__)
+    print("add %r " % obj.__repr__)
 
 
 def get_order_num(order):
@@ -192,7 +189,7 @@ def stock_2_order(stock_data):
         stock_money.total = stock_money.total - sold_num * stock_money.price
 
     order.productType = stock.productType
-    order.dateTime = stock_data['dataTime']
+    order.dateTime = stock_data['dateTime']
     order.productDescription = stock.productDescription
     order.userId = stock_data['userId']
     order.productName = stock.productName
@@ -208,5 +205,15 @@ def stock_2_order(stock_data):
     order_buyer.purchaser = stock_data['purchaser']
     order_buyer.contact = stock_data['contact']
 
-    add_object(order, order_money, order_buyer)
+    md = MoneyDetail()
+    md.moneyType = 0
+    md.productName = stock.productName
+    md.productType = stock.productType
+    md.money = order_money.soldPrice
+    md.dateTime = stock_data['dateTime']
+
+    add_object(order)
+    add_object(order_money)
+    add_object(order_buyer)
+    add_object(md)
     return 1

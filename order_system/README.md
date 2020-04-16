@@ -83,6 +83,16 @@ CREATE TABLE `stock_creator`(
 		`contact` TINYTEXT,
 		PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `money_detail`(
+		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+		`dateTime` TIMESTAMP NOT NULL,
+		`moneyType` bit NOT NULL,
+		`productName` TINYTEXT NOT NULL,
+		`productType`  TINYTEXT NOT NULL,
+        `money` int(11) NOT NULL,
+		PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
 
 ### 配置信息

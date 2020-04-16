@@ -25,48 +25,40 @@ def get_total_money(query_type, money_type, flag):
     return overview
 
 
-def get_time(elem):
-    return elem.dateTime
-
-
-def get_money_detail(order_money, stock_money, page):
+def get_money_detail(md, page):
     page_size = 50
-    # 对result中数据按time倒序
-    order_result = Order.query.filter_by(isActive=1).all()
-    stock_result = Stock.query.filter_by(isSold=0).all()
-    result = order_result + stock_result
-    # result中数据为按照time倒序的所有有效的订单和库存数据
-    result.sort(reverse=True, key=get_time)
+
+    result = md.query.filter_by().all()
 
     num = len(result)
     back_data = {
         "moneyDetail": [],
         "num": num
     }
-    # 计算显示片段
     if num > page_size:
-        # 有多页
-        start = (page - 1) * page_size
-        end = start + 49
-        if end > num:
-            end = num
+        start = num - page * page_size - 1
+        if start < 0:
+            start = 1
+        end = num - (page - 1) * page_size - 1
+        # num = end - start + 1
     else:
-        start = 0
-        end = num
+        start = -1
+        end = num - 1
 
-    for i in range(start, end):
+    length = range(end, start, -1)  # 逆序
+
+    for i in length:
         detail = {
             "dateTime": str(result[i].dateTime),
             "productType": result[i].productType.split('/'),
             "productName": result[i].productName,
+            "money": result[i].money
         }
-        if type(result[i]) == Order:
-            money = order_money.query.get(result[i].id).soldPrice
+        order_or_stock = int.from_bytes(result[i].moneyType, byteorder='big')
+        if order_or_stock == 0:
             detail['type'] = "in"
-        elif type(result[i]) == Stock:
-            money = stock_money.query.get(result[i].id).total
+        elif order_or_stock == 1:
             detail['type'] = "out"
-        detail['money'] = money
 
         back_data['moneyDetail'].append(detail)
     return back_data

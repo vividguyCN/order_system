@@ -2,7 +2,9 @@ from flask import request, Blueprint
 import json
 import datetime
 from app.models.stock import Stock, StockMoney, Creator
+from app.models.money import MoneyDetail
 from app.database.stock import insert_stock, get_stock, edit_stock_info, get_all_stocks, get_stock_page
+from app.database.order import add_object
 
 stock_api = Blueprint('stock', __name__)
 
@@ -118,6 +120,8 @@ def add_stock():
     stock = Stock()
     stock_money = StockMoney()
     stock_creator = Creator()
+    md = MoneyDetail()
+
     # 配置stock_info
     stock.userId = back_data['userId']
     stock.dateTime = datetime.datetime.now()
@@ -141,9 +145,16 @@ def add_stock():
     # 配置stock_creator
     stock_creator.creator = back_data['creator']
     stock_creator.contact = back_data['contact']
+    # 配置资金流水
+    md.moneyType = 1
+    md.productType = product_type
+    md.productName = back_data['productName']
+    md.money = stock_money.total
+    md.dateTime = datetime.datetime.now()
 
     # TODO 增加异常处理（数据库回滚）,增加insert失败
     insert_stock(stock, stock_money, stock_creator)
+    add_object(md)
     back_json = {
         "status": "success"
     }

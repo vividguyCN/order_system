@@ -1,6 +1,7 @@
 from flask import request, Blueprint
 import json
 from app.database.order import *
+from app.models.money import MoneyDetail
 
 order_api = Blueprint('order', __name__)
 
@@ -130,7 +131,18 @@ def add_other_order():
         buyer.purchaser = back_data['purchaser']
         buyer.contact = back_data['contact']
         # TODO 增加异常处理（数据库回滚）,增加insert失败
-        add_object(order, money, buyer)
+        add_object(order)
+        add_object(money)
+        add_object(buyer)
+        # 资金流水加入
+        md = MoneyDetail()
+        md.dateTime = datetime.datetime.now()
+        md.moneyType = 0
+        md.productType = product_type
+        md.productName = back_data['productName']
+        md.money = back_data['soldPrice']
+        add_object(md)
+
         back_json = {
             "status": "success"
         }
@@ -205,7 +217,7 @@ def add_stock_order():
         "purchaser": stock_data.get('purchaser'),
         "contact": stock_data.get('contact'),
         "note": stock_data.get("note"),
-        "dataTime": datetime.datetime.now(),
+        "dateTime": datetime.datetime.now(),
         "platform": stock_data.get('platform')
     }
 
