@@ -1,4 +1,4 @@
-from flask import request, session, Blueprint
+from flask import request, session, Blueprint, current_app
 import json
 from app.models.users import User
 from app.database.login import query_object, add_object, edit_user
@@ -76,11 +76,11 @@ def login():
             session['email'] = result.email
             session['role'] = result.role
 
-            # app.logger.info('%s logged in successfully', back_data['username'])
+            current_app.logger.info('%s logged in successfully', back_data['username'])
 
             return json.dumps(json_data), 200
     # 登录失败 返回状态码
-    # user_api.logger.info('%s failed to login in ', back_data['username'])
+    current_app.logger.info('%s failed to login in ', back_data['username'])
     json_data = {
         "msg": "账户未注册或被封禁"
     }
@@ -156,11 +156,11 @@ def register():
         if result == 1:
             back_json['reason'] = '用户名被占用'
             back_json['verified'] = False
-            # user_api.logger.info('%s register failed ,reason : %s', back_data['username'], back_json['reason'])
+            current_app.logger.info('%s register failed ,reason : %s', back_data['username'], back_json['reason'])
         elif result == 2:
             back_json['reason'] = '已存在的邮箱地址，请直接登录'
             back_json['verified'] = False
-            # user_api.logger.info('%s register failed ,reason : %s', back_data['username'], back_json['reason'])
+            current_app.info('%s register failed ,reason : %s', back_data['username'], back_json['reason'])
         elif result == 3:
             # add new_account
             user = User()
@@ -170,7 +170,7 @@ def register():
             user.role = back_data['role']
             user.isActive = 1
             add_object(user)
-            # user_api.logger.info('%s register successfully ', back_data['username'])
+            current_app.logger.info('%s register successfully ', back_data['username'])
     else:
         back_json = {
             'status': False,
@@ -196,7 +196,7 @@ def logout():
                   type: string
                   example: success
     """
-    # user_api.logger.info('%s logout successfully.', session['username'])
+    current_app.logger.info('%s logout successfully.', session['username'])
     session.clear()
     back_json = {
         "status": "success"
@@ -296,7 +296,7 @@ def edit_user_info():
             back_json['status'] = 'success'
             session['username'] = new_info['new_name']
             session['email'] = new_info['new_email']
-            # app.logger.info('%s change name to %s', session['username'],new_info['new_name'])
+            current_app.logger.info('%s change name to %s', session['username'],new_info['new_name'])
 
         # 如果用户申请修改密码
         if data.get('changePassword') == 1:
@@ -310,10 +310,10 @@ def edit_user_info():
                 edit_user(uid, 2, new_info)
                 back_json['status'] = 'success'
                 session['password'] = new_password
-                # app.logger.info('%s change password', session['username'])
+                current_app.logger.info('%s change password', session['username'])
             else:
                 # 考虑优先级问题
-                # app.logger.info('%s change password failed', session['username'])
+                current_app.logger.info('%s change password failed', session['username'])
                 back_json['reason'] = '原密码输入错误'
 
     return json.dumps(back_json), 200

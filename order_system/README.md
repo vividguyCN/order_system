@@ -1,4 +1,4 @@
-# 订单管理后台
+# 进销存后台管理系统
 
 ### 安装相关依赖
 ```
@@ -17,7 +17,7 @@ python3 main.py
 
 ### 创建数据表
 ```
-CREATE TABLE `login` (
+CREATE TABLE `user` (
         `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
         `username` tinytext NOT NULL,
         `password` tinytext NOT NULL,
@@ -35,6 +35,7 @@ CREATE TABLE `order_info`(
 		`productName` TINYTEXT NOT NULL,
 		`productDescription` TINYTEXT,
 		`platform` TINYTEXT NOT NULL,
+        `stockId` int(11) NOT NULL,
 		`note` TINYTEXT,
 		`isActive` bit NOT NULL DEFAULT 1,
 		PRIMARY KEY (`id`)
@@ -86,6 +87,7 @@ CREATE TABLE `stock_creator`(
 
 CREATE TABLE `money_detail`(
 		`id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        `typeId` int(11) UNSIGNED NOT NULL,
 		`dateTime` TIMESTAMP NOT NULL,
 		`moneyType` bit NOT NULL,
 		`productName` TINYTEXT NOT NULL,

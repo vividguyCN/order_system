@@ -1,4 +1,4 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, current_app
 import json
 from app.database.order import *
 from app.models.money import MoneyDetail
@@ -120,6 +120,7 @@ def add_other_order():
         order.productName = back_data['productName']
         order.productDescription = str(back_data['productDescription'])
         order.platform = back_data['platform']
+        order.stockId = 0
         order.note = back_data['note']
         order.isActive = 1
         # 订单金额
@@ -137,6 +138,7 @@ def add_other_order():
         # 资金流水加入
         md = MoneyDetail()
         md.dateTime = datetime.datetime.now()
+        md.typeId = order.id
         md.moneyType = 0
         md.productType = product_type
         md.productName = back_data['productName']
@@ -146,7 +148,7 @@ def add_other_order():
         back_json = {
             "status": "success"
         }
-    # app.logger.info('%s insert order successfully', back_data['userId'])
+    current_app.logger.info('%s 创建其他订单，产品:%s', back_data['userId'], back_data['productName'])
     return json.dumps(back_json),200
 
 
@@ -229,6 +231,7 @@ def add_stock_order():
         back_json['reason'] = '库存不足'
     elif result == 1:
         back_json['status'] = 'success'
+        current_app.logger.info("%s 创建库存订单 订单id: %s", stock_data['userId'], stock_data['stockId'])
     return json.dumps(back_json), 200
 
 
@@ -311,7 +314,7 @@ def del_order():
     back_json = {
         "status": "success"
     }
-
+    current_app.logger.info('%s 订单删除成功', order_id)
     return json.dumps(back_json), 200
 
 
@@ -428,11 +431,13 @@ def edit_order():
         back_json = {
             "status": "success"
         }
+        current_app.logger.info('%s 修改订单成功', get_data.get('userId'))
     else:
         back_json = {
             "status": "failed",
             "reason": "修改订单失败"
         }
+        current_app.logger.info('%s 修改订单失败', get_data.get('userId'))
     return json.dumps(back_json), 200
 
 

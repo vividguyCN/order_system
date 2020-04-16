@@ -56,7 +56,13 @@ def get_money_detail(md, page):
         }
         order_or_stock = int.from_bytes(result[i].moneyType, byteorder='big')
         if order_or_stock == 0:
-            detail['type'] = "in"
+            order_data = Order.query.get(result[i].typeId)
+            flag = int.from_bytes(order_data.isActive, byteorder='big')
+            # 如果订单有效
+            if flag == 1:
+                detail['type'] = "in"
+            else:
+                continue
         elif order_or_stock == 1:
             detail['type'] = "out"
 

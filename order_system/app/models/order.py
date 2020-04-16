@@ -11,6 +11,7 @@ class Order(db.Model):
     productName = db.Column(db.String(255),unique=True)
     productDescription = db.Column(db.String(255),unique=True)
     platform = db.Column(db.String(255),unique=True)
+    stockId = db.Column(db.Integer, unique=True)
     note = db.Column(db.String(255),unique=True)
     isActive = db.Column(db.Integer,unique=True)
 

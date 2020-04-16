@@ -1,4 +1,4 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, current_app
 import json
 import datetime
 from app.models.stock import Stock, StockMoney, Creator
@@ -145,20 +145,29 @@ def add_stock():
     # 配置stock_creator
     stock_creator.creator = back_data['creator']
     stock_creator.contact = back_data['contact']
-    # 配置资金流水
-    md.moneyType = 1
-    md.productType = product_type
-    md.productName = back_data['productName']
-    md.money = stock_money.total
-    md.dateTime = datetime.datetime.now()
 
-    # TODO 增加异常处理（数据库回滚）,增加insert失败
-    insert_stock(stock, stock_money, stock_creator)
-    add_object(md)
-    back_json = {
-        "status": "success"
-    }
-    # app.logger.info('%s insert order successfully', back_data['userId'])
+    try:
+        insert_stock(stock, stock_money, stock_creator)
+
+        # 配置资金流水
+        md.moneyType = 1
+        md.typeId = stock.id
+        md.productType = product_type
+        md.productName = back_data['productName']
+        md.money = stock_money.total
+        md.dateTime = datetime.datetime.now()
+        add_object(md)
+
+        back_json = {
+            "status": "success"
+        }
+        current_app.logger.info('%s insert stock successfully', back_data['productName'])
+    except:
+        # TODO 错误之后数据库的id问题
+        back_json = {
+            "status": "failed"
+        }
+        current_app.logger.error('创建库存发生错误')
     return json.dumps(back_json), 200
 
 

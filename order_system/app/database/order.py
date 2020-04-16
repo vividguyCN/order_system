@@ -87,6 +87,7 @@ def get_order(order_id):
     order = Order.query.get(order_id)
     money = OrderMoney.query.get(order_id)
     purchaser = Buyer.query.get(order_id)
+
     is_active = int.from_bytes(order.isActive, byteorder='big')
 
     if is_active:
@@ -103,7 +104,6 @@ def get_order(order_id):
             "purchaser": purchaser.purchaser,
             "contact": purchaser.contact
         }
-        # TODO 解决其他订单中文问题
         try:
             back_data["productDescription"] = eval(order.productDescription)
         except:
@@ -116,6 +116,24 @@ def get_order(order_id):
 
 def delete_order(order_id):
     order = Order.query.get(order_id)
+    # 如果是库存订单，删除订单之后库存退回
+    if order.stockId != 0:
+        order_money = OrderMoney.query.get(order_id)
+        stock_money = StockMoney.query.get(order.stockId)
+        sold_price = order_money.purchasePrice
+        price = stock_money.price
+        sold_num = sold_price / price
+        # 如果库存已经不存在
+        if stock_money.num == 0:
+            stock = Stock.query.get(order.stockId)
+            stock.isSold = 0
+            stock_money.num = sold_num
+            stock_money.total = sold_num * price
+        # 还有库存
+        else:
+            stock_money.num = stock_money.num + sold_num
+            stock_money.total = stock_money.total + sold_num * price
+    # 设置订单无效
     order.isActive = 0
     return 1
 
@@ -194,6 +212,7 @@ def stock_2_order(stock_data):
     order.userId = stock_data['userId']
     order.productName = stock.productName
     order.platform = stock_data['platform']
+    order.stockId = stock.id
     order.note = stock_data['note']
     order.isActive = 1
 
@@ -205,15 +224,17 @@ def stock_2_order(stock_data):
     order_buyer.purchaser = stock_data['purchaser']
     order_buyer.contact = stock_data['contact']
 
+    add_object(order)
+    add_object(order_money)
+    add_object(order_buyer)
+
     md = MoneyDetail()
     md.moneyType = 0
+    md.typeId = order.id
     md.productName = stock.productName
     md.productType = stock.productType
     md.money = order_money.soldPrice
     md.dateTime = stock_data['dateTime']
 
-    add_object(order)
-    add_object(order_money)
-    add_object(order_buyer)
     add_object(md)
     return 1

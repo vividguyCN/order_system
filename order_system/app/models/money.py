@@ -6,6 +6,7 @@ class MoneyDetail(db.Model):
     _tablename_ = 'money_detail'
     id = db.Column(db.Integer, primary_key=True)
     dateTime = db.Column(db.DateTime, unique=True)
+    typeId = db.Column(db.Integer, unique=True)
     # 订单为0,库存为1
     moneyType = db.Column(db.Integer, unique=True)
     productName = db.Column(db.String, unique=True)
