@@ -1,8 +1,8 @@
 from flask import request, Blueprint
 import json
 import datetime
-from order_system.app.models.stock import Stock, StockMoney, Creator
-from order_system.app.database.stock import insert_stock, get_stock, edit_stock_info, get_all_stocks, get_stock_page
+from app.models.stock import Stock, StockMoney, Creator
+from app.database.stock import insert_stock, get_stock, edit_stock_info, get_all_stocks, get_stock_page
 
 stock_api = Blueprint('stock', __name__)
 

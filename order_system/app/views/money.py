@@ -1,8 +1,8 @@
 from flask import Blueprint, request
 import json
-from order_system.app.database.money import get_total_money, get_money_detail
-from order_system.app.models.stock import StockMoney, Stock
-from order_system.app.models.order import OrderMoney, Order
+from app.database.money import get_total_money, get_money_detail
+from app.models.stock import StockMoney, Stock
+from app.models.order import OrderMoney, Order
 
 money_api = Blueprint('money', __name__)
 

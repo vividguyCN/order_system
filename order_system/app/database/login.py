@@ -1,6 +1,6 @@
 from sqlalchemy import and_, or_
-from order_system.app.models.users import User
-from order_system.app.common import db
+from app.models.users import User
+from app.common import db
 
 
 # 增加

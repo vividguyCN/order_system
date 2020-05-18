@@ -37,7 +37,7 @@ class DevelopmentConfig(Config):
 
 
 # 测试环境配置
-class TestConfig(Config):
+class Production(Config):
     HOSTNAME = 'dmysql'
     PORT = '3306'
     DATABASE = 'order_system'
@@ -50,6 +50,6 @@ class TestConfig(Config):
 # 生成一个字典，用来根据字符串找到对应的配置类。
 config = {
     'development': DevelopmentConfig,
-    'testing': TestConfig,
-    'default': TestConfig
+    'production': Production,
+    'default': Production
 }

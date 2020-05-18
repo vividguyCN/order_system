@@ -1,7 +1,7 @@
 import datetime
-from order_system.app.common import db
-from order_system.app.models.order import Order, OrderMoney, Buyer
-from order_system.app.models.stock import Stock, StockMoney
+from app.common import db
+from app.models.order import Order, OrderMoney, Buyer
+from app.models.stock import Stock, StockMoney
 
 
 # 新增订单
