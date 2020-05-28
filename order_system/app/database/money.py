@@ -1,5 +1,6 @@
 from app.models.order import Order
 from app.models.stock import Stock
+from datetime import datetime, timedelta
 
 
 def get_total_money(query_type, money_type, flag):
@@ -25,7 +26,7 @@ def get_total_money(query_type, money_type, flag):
     return overview
 
 
-def get_money_detail(md, page):
+def get_money_detail(md, page, time_span):
     page_size = 50
 
     result = md.query.filter_by().all()
@@ -33,7 +34,9 @@ def get_money_detail(md, page):
     num = len(result)
     back_data = {
         "moneyDetail": [],
-        "num": num
+        "num": 0,
+        "in_money": 0,
+        "out_money": 0
     }
     if num > page_size:
         start = num - page * page_size - 1
@@ -47,7 +50,22 @@ def get_money_detail(md, page):
 
     length = range(end, start, -1)  # 逆序
 
+    # 加入时间约束
+    end_time = datetime.now()
+    if time_span == 'all':
+        start_time = datetime.strptime('2016-5-24 00:00:00', '%Y-%m-%d %H:%M:%S')
+    elif time_span == 'w':
+        start_time = datetime.now() - timedelta(days=7)
+    elif time_span == 'm':
+        start_time = datetime.now().replace(day=1)
+
+    # 计算total money
+    out_money = 0
+    in_money = 0
+
     for i in length:
+        if result[i].dateTime < start_time or result[i].dateTime > end_time:
+            continue
         detail = {
             "dateTime": str(result[i].dateTime),
             "productType": result[i].productType.split('/'),
@@ -61,10 +79,17 @@ def get_money_detail(md, page):
             # 如果订单有效
             if flag == 1:
                 detail['type'] = "in"
+                in_money = in_money + detail['money']
             else:
                 continue
         elif order_or_stock == 1:
             detail['type'] = "out"
+            out_money = out_money + detail['money']
 
         back_data['moneyDetail'].append(detail)
+
+    back_data['num'] = len(back_data['moneyDetail'])
+    back_data['in_money'] = in_money
+    back_data['out_money'] = out_money
+
     return back_data

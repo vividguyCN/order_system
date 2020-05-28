@@ -35,9 +35,10 @@ def money_homepage():
 def money_detail():
     data = request.get_json()
     page = int(data.get('page'))
+    time_span = data.get('timeSpan')
 
     md = MoneyDetail()
 
-    back_json = get_money_detail(md, page)
+    back_json = get_money_detail(md, page, time_span)
 
     return json.dumps(back_json), 200

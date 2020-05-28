@@ -188,6 +188,20 @@ def edit_order_info(data):
     return 1
 
 
+def out_stock(stock_id, sold_num):
+    stock_money = StockMoney.query.get(stock_id)
+    stock = Stock.query.get(stock_id)
+    if sold_num > stock_money.num:
+        return 0
+    if stock_money.num - sold_num == 0:
+        stock_money.num = 0
+        stock.isSold = 1
+    else:
+        stock_money.num = stock_money.num - sold_num
+        stock_money.total = stock_money.total - sold_num * stock_money.price
+    return 1
+
+
 def stock_2_order(stock_data):
     order = Order()
     order_money = OrderMoney()
@@ -197,14 +211,20 @@ def stock_2_order(stock_data):
 
     # 修改库存
     sold_num = stock_data['num']
-    if sold_num > stock_money.num:
+    sold_result = out_stock(stock_data['stockId'], sold_num)
+    # 库存不足返回0
+    if sold_result == 0:
         return 0
-    if stock_money.num - sold_num == 0:
-        stock_money.num = 0
-        stock.isSold = 1
-    else:
-        stock_money.num = stock_money.num - sold_num
-        stock_money.total = stock_money.total - sold_num * stock_money.price
+
+    # 处理配件数组
+    accessory_total_money = 0
+    if stock_data['accessories'] != '':
+        for accessory_id in range(len(stock_data['accessories'])):
+            accessory_money = StockMoney.query.get(accessory_id)
+            # 对订单金额修改
+            accessory_total_money = accessory_total_money + accessory_money.price
+            # 配件出库
+            out_stock(accessory_id, 1)
 
     order.productType = stock.productType
     order.dateTime = stock_data['dateTime']
@@ -217,7 +237,8 @@ def stock_2_order(stock_data):
     order.isActive = 1
 
     order_money.soldPrice = stock_data['soldPrice'] * sold_num
-    order_money.purchasePrice = stock_money.price * sold_num
+    # 成本加上配件金额
+    order_money.purchasePrice = stock_money.price * sold_num + accessory_total_money
     order_money.postPrice = stock_data['postPrice']
     order_money.profit = order_money.soldPrice - order_money.postPrice - order_money.purchasePrice
 

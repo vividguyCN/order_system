@@ -24,3 +24,6 @@ def create_app(config_name):
 
     # 返回app实例对象
     return app
+
+
+

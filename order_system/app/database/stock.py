@@ -173,3 +173,19 @@ def get_stock_page(stock, money, type_dict):
     type_dict['overview']['total'] = total_money
     return type_dict
 
+
+def get_accessories_list():
+    # 订单需要配件，直接匹配，增加订单配件金额
+    # 逻辑为库存中对应配件减少，库存金额减少，销售金额不增加，订单配件金额增加
+    accessories_list = []
+    num = Stock.query.filter().count()
+    page_num = int(num / 50)
+    for page in range(1, page_num + 1):
+        stock_list = get_all_stocks(Stock, StockMoney, Creator, page)
+        stock_list = stock_list['stockList']
+        length = len(stock_list)
+        for stock in range(length):
+            if 'Accessories' in stock['productType']:
+                accessories_list.append(stock)
+
+    return accessories_list

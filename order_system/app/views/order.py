@@ -2,13 +2,20 @@ from flask import request, Blueprint, current_app
 import json
 from app.database.order import *
 from app.models.money import MoneyDetail
+from app.models.users import verify_token
 
 order_api = Blueprint('order', __name__)
 
 
 @order_api.route("/addOtherOrder", methods=["POST"])
 def add_other_order():
-    if request.method == "POST":
+    # 获取token查看是否有修改权限
+    token = request.headers.get('token')
+    user = verify_token(token)
+    if user == None:
+        return 'Bad Request', 400
+    # admin权限，允许添加订单
+    if user.role == 1:
         get_data = request.get_json()
         # 获取order信息
         order_info = get_data.get('order')
@@ -70,36 +77,54 @@ def add_other_order():
         back_json = {
             "status": "success"
         }
-    current_app.logger.info('%s 创建其他订单，产品:%s', back_data['userId'], back_data['productName'])
-    return json.dumps(back_json),200
+        current_app.logger.info('%s 创建其他订单，产品:%s', back_data['userId'], back_data['productName'])
+    # 没有权限添加订单
+    else:
+        back_json = {
+            "status": "forbid"
+        }
+    return json.dumps(back_json), 200
 
 
 @order_api.route("/addStockOrder", methods=["POST"])
 def add_stock_order():
-    data = request.get_json()
-    stock_data = data.get('stock')
-    stock_data = {
-        "stockId": data.get("stockId"),
-        "userId": data.get('userId'),
-        "soldPrice": stock_data.get("money")['soldPrice'],
-        "postPrice": stock_data.get("money")['postPrice'],
-        "num": stock_data.get('num'),
-        "purchaser": stock_data.get('purchaser'),
-        "contact": stock_data.get('contact'),
-        "note": stock_data.get("note"),
-        "dateTime": datetime.datetime.now(),
-        "platform": stock_data.get('platform')
-    }
+    # 获取token查看是否有修改权限
+    token = request.headers.get('token')
+    user = verify_token(token)
+    if user == None:
+        return 'Bad Request', 400
+    if user.role == 1:
+        data = request.get_json()
+        stock_data = data.get('stock')
+        stock_data = {
+            "stockId": data.get("stockId"),
+            "userId": data.get('userId'),
+            "soldPrice": stock_data.get("money")['soldPrice'],
+            "postPrice": stock_data.get("money")['postPrice'],
+            "num": stock_data.get('num'),
+            "purchaser": stock_data.get('purchaser'),
+            "contact": stock_data.get('contact'),
+            "note": stock_data.get("note"),
+            "dateTime": datetime.datetime.now(),
+            "platform": stock_data.get('platform'),
+            # 注意 配件是一个数组
+            "accessories": stock_data.get('accessories')
+        }
 
-    result = stock_2_order(stock_data)
-    back_json = {
-        "status": "failed"
-    }
-    if result == 0:
-        back_json['reason'] = '库存不足'
-    elif result == 1:
-        back_json['status'] = 'success'
-        current_app.logger.info("%s 创建库存订单 订单id: %s", stock_data['userId'], stock_data['stockId'])
+        result = stock_2_order(stock_data)
+        back_json = {
+            "status": "failed"
+        }
+        if result == 0:
+            back_json['reason'] = '库存不足'
+        elif result == 1:
+            back_json['status'] = 'success'
+            current_app.logger.info("%s 创建库存订单 库存id: %s", stock_data['userId'], stock_data['stockId'])
+    else:
+        back_json = {
+            "status": "forbid",
+            "reason": "Without permission"
+        }
     return json.dumps(back_json), 200
 
 
@@ -121,6 +146,7 @@ def get_order_info():
         return json.dumps(back_json), 404
 
 
+# 取消del order
 @order_api.route("/delOrder", methods=["DELETE"])
 def del_order():
     data = request.get_json()
@@ -135,21 +161,31 @@ def del_order():
 
 @order_api.route("/editOrderInfo", methods=["PUT"])
 def edit_order():
-    # 修改订单信息
-    get_data = request.get_json()
-    result = edit_order_info(get_data)
+    token = request.headers.get('token')
+    user = verify_token(token)
+    if user == None:
+        return 'Bad Request', 400
+    if user.role == 1:
+        # 修改订单信息
+        get_data = request.get_json()
+        result = edit_order_info(get_data)
 
-    if result == 1:
-        back_json = {
-            "status": "success"
-        }
-        current_app.logger.info('%s 修改订单成功', get_data.get('userId'))
+        if result == 1:
+            back_json = {
+                "status": "success"
+            }
+            current_app.logger.info('%s 修改订单成功', get_data.get('userId'))
+        else:
+            back_json = {
+                "status": "failed",
+                "reason": "修改订单失败"
+            }
+            current_app.logger.info('%s 修改订单失败', get_data.get('userId'))
     else:
         back_json = {
-            "status": "failed",
-            "reason": "修改订单失败"
+            "status": "forbid",
+            "reason": " Without permission"
         }
-        current_app.logger.info('%s 修改订单失败', get_data.get('userId'))
     return json.dumps(back_json), 200
 
 
